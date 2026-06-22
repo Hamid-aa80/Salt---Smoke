@@ -18,6 +18,75 @@
     font-weight: 700 !important;
 }
 
+.text-primary {
+    color: var(--primary) !important;
+}
+
+.bg-primary {
+    background-color: var(--primary) !important;
+}
+
+.bg-dark {
+    background-color: var(--dark) !important;
+}
+
+.bg-light {
+    background-color: var(--light) !important;
+}
+
+.text-light {
+    color: var(--light) !important;
+}
+
+.text-dark {
+    color: var(--dark) !important;
+}
+
+.btn-primary {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.btn-primary:hover {
+    background-color: #e5940f;
+    border-color: #e5940f;
+}
+
+.btn-lg {
+    padding: 15px 30px;
+    font-size: 18px;
+}
+
+.btn-lg-square {
+    width: 60px;
+    height: 60px;
+    padding: 15px 0;
+    font-size: 24px;
+}
+
+.btn-square {
+    width: 45px;
+    height: 45px;
+    padding: 13px 0;
+    font-size: 20px;
+}
+
+.btn-square i {
+    font-size: 22px;
+}
+
+span,
+.mb-0,
+.border-bottom{
+    color: var(--primary);
+}
+
+small,
+.mb-5 {
+    color: var(--light);
+}
+
+
 .back-to-top {
     position: fixed;
     display: none;
@@ -167,57 +236,9 @@
     border-bottom: 2px solid var(--primary);
 }
 
-.video {
-    position: relative;
-    height: 100%;
-    min-height: 500px;
-    background: linear-gradient(rgba(15, 23, 43, .1), rgba(15, 23, 43, .1)), url(../img/video.jpg);
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-size: cover;
-}
-
-.video .btn-play {
-    position: absolute;
-    z-index: 3;
-    top: 50%;
-    left: 50%;
-    transform: translateX(-50%) translateY(-50%);
-    box-sizing: content-box;
-    display: block;
-    width: 32px;
-    height: 44px;
-    border-radius: 50%;
-    border: none;
-    outline: none;
-    padding: 18px 20px 18px 28px;
-}
-
-.video .btn-play::before {
-    content: "";
-    position: absolute;
-    z-index: 0;
-    left: 50%;
-    top: 50%;
-    transform: translateX(-50%) translateY(-50%);
-    display: block;
-    width: 100px;
-    height: 100px;
-    background: var(--primary);
-    border-radius: 50%;
-    animation: pulse-border 1500ms ease-out infinite;
-}
-
-.video .btn-play span {
-    display: block;
-    position: relative;
-    z-index: 3;
-    width: 0;
-    height: 0;
-    border-left: 32px solid var(--dark);
-    border-top: 22px solid transparent;
-    border-bottom: 22px solid transparent;
-
+.nav-pills .nav-item .nav-link {
+    border-bottom: 2px solid transparent;
+    transition: .5s;
 }
 
 @keyframes pulse-border {
@@ -245,7 +266,7 @@
 }
 
 .team-item:hover img {
-    transform: scale(1.1); 
+    transform: scale(1.1);
 
 }
 
