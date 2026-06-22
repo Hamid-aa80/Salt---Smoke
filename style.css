@@ -77,7 +77,7 @@
 
 span,
 .mb-0,
-.border-bottom{
+.border-bottom {
     color: var(--primary);
 }
 
@@ -167,7 +167,7 @@ small,
 }
 
 .hero-header {
-    background: linear-gradient(rgba(15, 23, 43, .9), rgba(15, 23, 43, .9)), url(../img/bg-hero.jpg);
+    background: linear-gradient(rgba(15, 23, 43, .9), rgba(15, 23, 43, .9)), url(img/bg-hero.jpg);
     background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;
