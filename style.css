@@ -311,7 +311,7 @@ small,
 
 }
 
-footer .btn.btn-link::before {
+.footer .btn.btn-link::before {
     position: relative;
     content: "\f105";
     font-family: "Font Awesome 5 Free";
@@ -325,27 +325,42 @@ footer .btn.btn-link::before {
     box-shadow: none;
 
     .footer .copyright {
-        padding: 25px 0;
-        font-size: 15px;
-        border-top: 1px solid rgba(255, 255, 255, .1);
-
+        color: var(--light);
+        font-size: 14px;
     }
 
     .footer .copyright a {
-        color: var(--light);
+        color: var(--primary);
     }
 
     .footer .footer-menu a {
+        display: inline-block;
         margin-right: 15px;
         padding-right: 15px;
-        border-right: 1px solid rgba(255, 255, 255, .1);
+        color: var(--light);
+        font-size: 15px;
+        font-weight: normal;
+        text-transform: capitalize;
+        border-right: 1px solid rgba(255, 255, 255, .2);
+        transition: .3s;
 
     }
-}
 
-.footer .footer-menu a:last-child {
-    margin-right: 0;
-    padding-right: 0;
-    border-right: none;
+    .footer .footer-menu a:hover {
+        color: var(--primary);
+    }
 
+    .footer .footer-menu a:last-child {
+        margin-right: 0;
+        padding-right: 0;
+        border-right: none;
+
+    }
+
+    .footer .footer-menu a:last-child {
+        margin-right: 0;
+        padding-right: 0;
+        border-right: none;
+
+    }
 }
