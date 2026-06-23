@@ -179,7 +179,7 @@ small,
 
 @keyframes imgRotate {
     100% {
-        transform: perspective(360deg);
+        transform: rotate(360deg);
     }
 
 }
@@ -243,7 +243,7 @@ small,
 
 @keyframes pulse-border {
     0% {
-        transform: translateX(-50%) translateY(-50%) translateZ(0) scale(1.s);
+        transform: translateX(-50%) translateY(-50%) translateZ(0) scale(1.5);
         opacity: 1;
 
     }

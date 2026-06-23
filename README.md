@@ -36,7 +36,7 @@ By introducing a unique, high‑quality smokehouse concept not currently availab
 
 Salt & Smoke attracts people who want more than food — they want a mood, a moment, a memory.
 
-- 1. Couples Seeking Premium Date‑Night Experiences
+1. Couples Seeking Premium Date‑Night Experiences
 Your strongest, most natural audience segment.
 
 * Ages 24–45
@@ -49,7 +49,7 @@ Your strongest, most natural audience segment.
 
 * Love curated cocktails, wine, and fire‑kissed dishes
 
-- 2. Young Professionals & Food‑Lovers
+2. Young Professionals & Food‑Lovers
 People who appreciate craft cooking and premium visuals.
 
 * Ages 22–40
@@ -63,7 +63,7 @@ People who appreciate craft cooking and premium visuals.
 * Seek restaurants with a strong brand identity
 
 
-- 3. Social Groups & Small Gatherings
+3. Social Groups & Small Gatherings
 Friends who want a stylish, warm place to meet.
 
 * Ages 25–45
@@ -75,7 +75,7 @@ Friends who want a stylish, warm place to meet.
 * Prefer venues with atmosphere over loud bars
 
 
-- 4. Local Watford Residents Seeking Something “Different”
+4. Local Watford Residents Seeking Something “Different”
 People tired of the same chain restaurants.
 
 * Ages 28–55
@@ -86,7 +86,7 @@ People tired of the same chain restaurants.
 
 * Seek quality, consistency, and a memorable environment
 
-- 5. Aesthetic‑Driven Diners & Content Creators
+5. Aesthetic‑Driven Diners & Content Creators
 Your cinematic visuals attract this group naturally.
 
 * Ages 18–35
@@ -97,7 +97,7 @@ Your cinematic visuals attract this group naturally.
 
 * Value design, lighting, and brand storytelling
 
-- 6. Special‑Occasion Diners
+6. Special‑Occasion Diners
 People celebrating life moments.
 
 * Birthdays
@@ -115,27 +115,27 @@ People celebrating life moments.
 
 These are the real outcomes your guests are seeking — emotional, practical, and experiential.
 
-- 1. To Have a Memorable Date Night
+1. To Have a Memorable Date Night
 * Your guests want a place that feels intimate, cinematic, and special.
 * They want to connect, talk, lean in, and feel the moment.
 * → Date‑night experience
 
-- 2. To Enjoy Fire‑Kissed, High‑Quality Food
+2. To Enjoy Fire‑Kissed, High‑Quality Food
 * They want bold flavours, premium ingredients, and dishes that feel crafted, not generic.
 * They want to taste the smoke, the char, the heat.
 * → Signature food experience
 
-- 3. To Escape Into a Cinematic Atmosphere
+3. To Escape Into a Cinematic Atmosphere
 * Your dark‑premium ambience is a mood.
 * Guests want to feel transported — warm lighting, bokeh, shadows, fire.
 * → Cinematic ambience
 
-- 4. To Celebrate Something Special
+4. To Celebrate Something Special
 * Birthdays, anniversaries, promotions, first dates, reunions.
 * They want a place that feels worthy of the moment.
 * → Special‑occasion experience
 
-- 5. To Experience a Visually Stunning Environment
+5. To Experience a Visually Stunning Environment
 * Your guests love the aesthetic — the visuals matter.
 * They want a place that looks like a film scene and photographs beautifully.
 * → Aesthetic‑driven dining
@@ -146,7 +146,7 @@ These are the real outcomes your guests are seeking — emotional, practical, an
 These are the core outcomes the business must deliver to be successful, sustainable, and scalable.
 
 
-- 1. Deliver a Distinctive, Premium Dining Experience
+1. Deliver a Distinctive, Premium Dining Experience
 - You want Salt & Smoke to stand out in Watford as a unique, cinematic, fire‑kissed smokehouse.
 This means:
 
@@ -156,7 +156,7 @@ This means:
 * A recognisable brand identity
 * → Premium dining experience
 
-- 2. Achieve Strong, Predictable Revenue
+2. Achieve Strong, Predictable Revenue
 - The business must generate stable income through:
 
 * High‑value date‑night bookings
@@ -166,7 +166,7 @@ This means:
 * Special events
 * → Revenue strategy
 
-- 3. Build a Loyal, Returning Customer Base
+3. Build a Loyal, Returning Customer Base
 - Repeat customers are the backbone of a successful restaurant.
 Your goal is to create a place people return to for:
 
@@ -179,19 +179,19 @@ Your goal is to create a place people return to for:
 
 ## User stories
 
-- 1. Date‑Night Couple
+1. Date‑Night Couple
 
 * As a couple, I want a warm, intimate table, so that we can connect and enjoy a romantic evening together.
 * As a partner, I want the ambience to feel cinematic, so that the night feels special and memorable.
 * As a guest, I want beautifully presented, fire‑kissed dishes, so that the food becomes part of the experience.
 
-- 2. Food‑Lover / Young Professional
+2. Food‑Lover / Young Professional
 
 * As a food lover, I want bold, smoky flavours, so that I feel I’m eating something crafted and unique.
 * As a young professional, I want a premium but relaxed environment, so that I can unwind after work without feeling rushed.
 * As a diner, I want consistent quality, so that I trust the restaurant every time I visit.
 
-- 3. Social Group / Friends
+3. Social Group / Friends
 
 * As a group of friends, I want a stylish place to meet, so that we can enjoy a night out that feels elevated.
 * As a guest, I want great cocktails and sharable dishes, so that the evening feels social and fun.
