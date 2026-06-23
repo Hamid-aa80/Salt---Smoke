@@ -345,22 +345,4 @@ small,
         transition: .3s;
 
     }
-
-    .footer .footer-menu a:hover {
-        color: var(--primary);
-    }
-
-    .footer .footer-menu a:last-child {
-        margin-right: 0;
-        padding-right: 0;
-        border-right: none;
-
-    }
-
-    .footer .footer-menu a:last-child {
-        margin-right: 0;
-        padding-right: 0;
-        border-right: none;
-
-    }
 }
