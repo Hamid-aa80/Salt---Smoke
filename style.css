@@ -173,7 +173,7 @@ small,
     background-size: cover;
 }
 
-.hero-header img {
+#heroImage {
     animation: imgRotate 50s linear infinite;
 }
 
@@ -320,29 +320,3 @@ small,
 
 }
 
-.footer .btn.btn-link:hover {
-    letter-spacing: 1px;
-    box-shadow: none;
-
-    .footer .copyright {
-        color: var(--light);
-        font-size: 14px;
-    }
-
-    .footer .copyright a {
-        color: var(--primary);
-    }
-
-    .footer .footer-menu a {
-        display: inline-block;
-        margin-right: 15px;
-        padding-right: 15px;
-        color: var(--light);
-        font-size: 15px;
-        font-weight: normal;
-        text-transform: capitalize;
-        border-right: 1px solid rgba(255, 255, 255, .2);
-        transition: .3s;
-
-    }
-}
