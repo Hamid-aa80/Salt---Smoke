@@ -320,3 +320,6 @@ small,
 
 }
 
+.footer .btn.btn-link:hover {
+    color: var(--primary);
+}

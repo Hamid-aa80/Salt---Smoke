@@ -292,11 +292,11 @@ My wireframes were created using Figma at the start of my project to plan the la
 
 ### W3C HTML Test
 
-![Manual testing screenshot HTML](images/HTML-Test-Validate-by-URI.png)
+![Manual testing screenshot HTML](README-img/HTML-Test-Validate-by-URI.png)
 
 ### W3C CSS Test
 
-![Manual testing screenshot CSS](images/CSS-Test-Validate-by-URI.png)
+![Manual testing screenshot CSS](README-img/CSS-Test-Validate-by-URI.png)
 
 My project was deployed using Github:
 
@@ -314,37 +314,46 @@ My project was deployed using Github:
 
 #### (index.html) - Desktop
 
-![Lighthouse test index.html](images/Lighthouse-test-desktop.jpg)
+![Lighthouse test index.html](README-img/Lighthouse-test-desktop.jpg)
 
 #### (index.html) - Mobile
 
-![PageSpeed Insights](images/PageSpeed-Insights.jpg)
+![PageSpeed Insights](README-img/PageSpeed-Insights.jpg)
 
 ## SCREENSHOTS
 
 ### Navbar
 
-![Navbar](images/Navbar.png)
+![Navbar](README-img/Navbar.png)
 
 ### Homepage
 
-![Home page](images/Home-page.png)
+![Home page](README-img/Home-page.png)
 
 ### About page
 
-![About page](images/About-page.png)
+![About page](README-img/About-page.png)
+![About page](README-img/About2-page.png)
 
-### Products Page
+### Service Page
 
-![Products page](images/Products-page.png)
+![Service page](README-img/Service-page.png)
 
-### review Page
+### Menu Page
 
-![review page](images/review-page.png)
+![Menu page](README-img/Menu-page.png)
+
+### Reservation Page
+
+![Reservation Page](README-img/Reservation-Page.png)
+
+### Read More
+
+![Read More Page](README-img/Read-More-Page.png)
 
 ### Contact page
 
-![Contact page](images/Contact-page.png)
+![Contact page](README-img/Contact-page.png)
 
 ## Deployment
 
@@ -352,10 +361,10 @@ This project was developed using [VScode](https://code.visualstudio.com/), commi
 
 This site is hosted using GitHub pages, deployed directly from the master branch. The deployed site will update automatically upon new commits to the master branch. In order for the site to deploy correctly on GitHub pages, the landing page must be named index.html.
 
-These are the steps that can be taken to deploy the page on GitHub pages from it's [GitHub repository](hamid-aa80.github.io/Flower--Shop/):
+These are the steps that can be taken to deploy the page on GitHub pages from it's [GitHub repository]https://github.com/Hamid-aa80/Salt---Smoke.git:
 
 1. Log into GitHub.
-2. From the list of repositories on the screen, select [https://hamid-aa80.github.io/Flower--Shop/]
+2. From the list of repositories on the screen, select [https://github.com/Hamid-aa80/Salt---Smoke.git]
 3. From the menu items near the top of the page, select Settings.
 4. Scroll down to the GitHub Pages section.
 5. Under Source the drop-down menu should display Deploy from a branch
@@ -366,7 +375,7 @@ The deployed site can also be found on the repository page on the right handside
 
 To run locally, you can clone this repository directly into the editor of your choice by pasting git clone into your terminal. This can be found on the main repository page, clicking the code button and copy to cut ties with this GitHub repository, type git remote rm origin into the terminal.
 
-![GitHUb clone](images/GitHub-clone.png)
+![GitHUb clone](README-img/GitHub-clone.png)
 
 ## Credits
 
