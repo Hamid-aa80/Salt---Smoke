@@ -353,13 +353,13 @@
                                             <div class="col-md-6">
                                                 <div class="form-floating">
                                                     <input type="email" class="form-control" id="email"
-                                                        placeholder="Your Email">
+                                                        placeholder="Your Email" name="email">
                                                     <label for="email">Your Email</label>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-floating date " id="date3">
-                                                    <input type="date" class="form-control" id="datetime"
+                                                    <input type="date" class="form-control" id="datetime" name="date"
                                                         placeholder="Select Date & Time" data-target="#date3"
                                                         data-toggle="datetimepicker" />
                                                     <label for="datetime">Select Date & Time</label>
@@ -367,7 +367,8 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-floating">
-                                                    <select class="form-select" id="select1">
+                                                    <select class="form-select" id="select1" name="guests">
+                                                        <option value="" selected disabled>Select guests</option>
                                                         <option value="1">Person 1</option>
                                                         <option value="2">Person 2</option>
                                                         <option value="3">Person 3</option>
@@ -379,7 +380,7 @@
                                             <div class="col-12">
                                                 <div class="form-floating">
                                                     <textarea class="form-control" placeholder="Special Request"
-                                                        id="message" style="height: 100px"></textarea>
+                                                        id="message" name="request" style="height: 100px"></textarea>
                                                     <label for="message">Special Request</label>
                                                 </div>
                                             </div>

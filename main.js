@@ -188,6 +188,16 @@ document.addEventListener("DOMContentLoaded", () => {
       : "Fill in your details to preview your reservation.";
   };
 
+  const namePattern = /^[A-Za-z][A-Za-z\s'-]{1,}$/;
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const allowedGuestCounts = new Set(["1", "2", "3", "4"]);
+
+  const isValidName = name => namePattern.test(name);
+  const isValidEmail = email => emailPattern.test(email);
+  const isValidDate = date => Boolean(date) && date >= today;
+  const isValidGuestNumber = guests => allowedGuestCounts.has(guests);
+  const isValidRequest = request => request.length >= 5;
+
   const validateReservationForm = () => {
     if (!nameInput || !emailInput || !dateInput || !peopleSelect || !messageInput) {
       return false;
@@ -196,10 +206,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const name = nameInput.value.trim();
     const email = emailInput.value.trim();
     const date = dateInput.value;
-    const guests = Number.parseInt(peopleSelect.value, 10);
+    const guests = peopleSelect.value;
     const request = messageInput.value.trim();
 
-    if (!/^[A-Za-z][A-Za-z\s'-]{1,}$/.test(name)) {
+    if (!isValidName(name)) {
       nameInput.setCustomValidity("Please enter a valid full name.");
       nameInput.reportValidity();
       nameInput.focus();
@@ -207,7 +217,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     nameInput.setCustomValidity("");
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (!isValidEmail(email)) {
       emailInput.setCustomValidity("Please enter a valid email address.");
       emailInput.reportValidity();
       emailInput.focus();
@@ -222,7 +232,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return false;
     }
 
-    if (date < today) {
+    if (!isValidDate(date)) {
       dateInput.setCustomValidity("Reservation date cannot be in the past.");
       dateInput.reportValidity();
       dateInput.focus();
@@ -230,7 +240,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     dateInput.setCustomValidity("");
 
-    if (!Number.isInteger(guests) || guests < 1) {
+    if (!isValidGuestNumber(guests)) {
       peopleSelect.setCustomValidity("Please select the number of guests.");
       peopleSelect.reportValidity();
       peopleSelect.focus();
@@ -238,7 +248,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     peopleSelect.setCustomValidity("");
 
-    if (request.length < 5) {
+    if (!isValidRequest(request)) {
       messageInput.setCustomValidity("Please enter at least 5 characters for your request.");
       messageInput.reportValidity();
       messageInput.focus();
@@ -257,17 +267,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const name = nameInput.value.trim();
     const email = emailInput.value.trim();
     const date = dateInput.value;
-    const guests = Number.parseInt(peopleSelect.value, 10);
+    const guests = peopleSelect.value;
     const request = messageInput.value.trim();
 
     return (
-      /^[A-Za-z][A-Za-z\s'-]{1,}$/.test(name) &&
-      /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) &&
-      Boolean(date) &&
-      date >= today &&
-      Number.isInteger(guests) &&
-      guests > 0 &&
-      request.length >= 5
+      isValidName(name) &&
+      isValidEmail(email) &&
+      isValidDate(date) &&
+      isValidGuestNumber(guests) &&
+      isValidRequest(request)
     );
   };
 
