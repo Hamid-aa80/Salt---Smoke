@@ -52,11 +52,11 @@ Salt & Smoke is an interactive restaurant web application built as a portfolio p
 
 ## Color Scheme
 
-- primary: #fea116 (README-img/primary.png)
+- #fea116 ![primary ](README-img/primary.png)
 
-- light: #f1f8ff (README-img/light.png)
+- #f1f8ff ![light](README-img/light.png)
 
-- dark: #0f1728 (README-img/dark.png)
+- #0f1728 ![dark](README-img/dark.png)
 
 ## Contrast Checker
 
