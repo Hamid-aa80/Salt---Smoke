@@ -28,6 +28,7 @@
 - [Deployment](#deployment)
 - [Environment Configuration](#environment-configuration)
 - [Contributing](#contributing)
+- [Credits](#credits)
 - [License](#license)
 
 ---
@@ -644,6 +645,52 @@ We welcome contributions! To contribute:
 - Add tests for new features
 - Update documentation as needed
 - Ensure all tests pass before submitting PR
+
+---
+
+## 🙏 Credits
+
+### Core Technologies
+- [Node.js](https://nodejs.org/) - JavaScript runtime environment
+- [Express.js](https://expressjs.com/) - Fast and minimal web framework
+- [SQLite](https://www.sqlite.org/) - Lightweight relational database
+- [HTML5](https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/HTML5) - Semantic markup language
+- [CSS3](https://developer.mozilla.org/en-US/docs/Web/CSS) - Modern styling and animations
+
+### Frontend Libraries
+- [Bootstrap 5.3](https://getbootstrap.com/) - Responsive UI component framework
+- [Font Awesome 6](https://fontawesome.com/) - Comprehensive icon library
+- [Google Fonts - Pacifico](https://fonts.google.com/specimen/Pacifico) - Custom typography
+- [WOW.js](https://wowjs.uk/) - Scroll animation library
+- [jQuery](https://jquery.com/) - DOM manipulation and utilities
+- [animate.css](https://animate.style/) - CSS animation library
+
+### Backend Dependencies
+- [CORS](https://github.com/expressjs/cors) - Cross-origin resource sharing middleware
+- [body-parser](https://github.com/expressjs/body-parser) - HTTP request body parsing
+- [dotenv](https://github.com/motdotla/dotenv) - Environment variable management
+- [sqlite3](https://github.com/mapbox/node-sqlite3) - SQLite bindings for Node.js
+
+### Testing & Quality Assurance
+- [Playwright](https://playwright.dev/) - Cross-browser end-to-end testing framework
+- [W3C HTML Validator](https://validator.w3.org/) - HTML validation
+- [W3C CSS Validator](https://jigsaw.w3.org/css-validator/) - CSS validation
+- [Google Lighthouse](https://developers.google.com/web/tools/lighthouse) - Web performance auditing
+
+### Development Tools
+- [npm](https://www.npmjs.com/) - JavaScript package management
+- [Git](https://git-scm.com/) - Version control system
+- [GitHub Pages](https://pages.github.com/) - Static site hosting
+- [VS Code](https://code.visualstudio.com/) - Code editor
+
+### Inspirations & References
+- Restaurant design best practices
+- Modern web accessibility standards
+- Progressive enhancement principles
+- Mobile-first responsive design
+
+### Contributors
+- **Hamid** - Project Creator & Developer
 
 ---
 
