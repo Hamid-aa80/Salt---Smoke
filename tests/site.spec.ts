@@ -158,10 +158,17 @@ test("stays responsive on mobile and keeps navigation usable", async ({ page }) 
   await page.goto("/");
   await page.waitForLoadState("networkidle");
   await expect(page.locator(".navbar-toggler")).toBeVisible();
+
   await page.locator(".navbar-toggler").click();
   await expect(page.locator("#navbarCollapse")).toHaveClass(/show/);
   await page.getByRole("link", { name: "Menu" }).click();
   await expect(page.locator("#menu")).toBeInViewport();
+
+  await page.locator(".navbar-toggler").click();
+  await expect(page.locator("#navbarCollapse")).toHaveClass(/show/);
+  await page.getByRole("link", { name: "Reservation" }).click();
+  await expect(page.locator("#reservation")).toBeInViewport();
+  await expect(page.locator("#navbarCollapse")).not.toHaveClass(/show/);
 });
 
 test("searches menu items by name", async ({ page }) => {
