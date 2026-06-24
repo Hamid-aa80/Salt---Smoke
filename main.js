@@ -28,7 +28,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
     element.classList.remove("d-none", "alert-success", "alert-danger", "alert-warning", "alert-info");
     element.classList.add("alert", `alert-${variant}`);
-    element.textContent = message;
+    element.setAttribute("role", "alert");
+    element.setAttribute("aria-live", variant === "danger" ? "assertive" : "polite");
+    element.textContent = "";
+
+    const title = {
+      success: "Success",
+      danger: "Error",
+      warning: "Warning",
+      info: "Info"
+    }[variant];
+
+    if (title) {
+      const heading = document.createElement("strong");
+      heading.textContent = `${title}: `;
+      element.appendChild(heading);
+    }
+
+    element.appendChild(document.createTextNode(message));
   };
 
   const hideAlertMessage = element => {
@@ -247,7 +264,11 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!emailPattern.test(email)) {
           newsletterInput.setCustomValidity("Please enter a valid email to subscribe.");
           newsletterInput.reportValidity();
-          showAlertMessage(newsletterFeedback, "danger", "Please enter a valid email address to subscribe.");
+          showAlertMessage(
+            newsletterFeedback,
+            "danger",
+            "Please enter a valid email address to subscribe."
+          );
           return;
         }
 
@@ -256,7 +277,7 @@ document.addEventListener("DOMContentLoaded", () => {
         showAlertMessage(
           newsletterFeedback,
           "success",
-          `Thanks for subscribing, ${email}. We'll keep you updated.`
+          `Thanks for subscribing, ${email}. We'll keep you updated with offers and news.`
         );
       };
 
@@ -278,24 +299,32 @@ document.addEventListener("DOMContentLoaded", () => {
   const reservationConfirmation = document.getElementById("reservationConfirmation");
   if (reservationConfirmation) {
     const details = readReservationConfirmation();
-    const confirmationMessage = details
-      ? (() => {
-          sessionStorage.removeItem(reservationSuccessKey);
-          const summaryParts = [];
+    if (details) {
+      sessionStorage.removeItem(reservationSuccessKey);
+      const summaryParts = [];
 
-          if (details.name) summaryParts.push(details.name);
-          if (details.date) summaryParts.push(new Date(details.date).toLocaleDateString("en-GB"));
-          if (details.guests) {
-            summaryParts.push(`${details.guests} guest${details.guests === "1" ? "" : "s"}`);
-          }
+      if (details.name) summaryParts.push(details.name);
+      if (details.date) summaryParts.push(new Date(details.date).toLocaleDateString("en-GB"));
+      if (details.guests) {
+        summaryParts.push(`${details.guests} guest${details.guests === "1" ? "" : "s"}`);
+      }
 
-          return summaryParts.length
-            ? `Your reservation request for ${summaryParts.join(" • ")} has been received. We'll be in touch shortly to confirm the details.`
-            : "Your reservation request has been received. We'll be in touch shortly to confirm the details.";
-        })()
-      : "Your reservation request has been received. We'll be in touch shortly to confirm the details.";
-
-    reservationConfirmation.textContent = confirmationMessage;
+      showAlertMessage(
+        reservationConfirmation,
+        "success",
+        summaryParts.length
+          ? `Your reservation request for ${summaryParts.join(
+              " • "
+            )} has been received. We'll be in touch shortly to confirm the details.`
+          : "Your reservation request has been received. We'll be in touch shortly to confirm the details."
+      );
+    } else {
+      showAlertMessage(
+        reservationConfirmation,
+        "danger",
+        "We couldn't find your reservation details. Please go back and submit the form again."
+      );
+    }
   }
   const reservationForm = reservationSection
     ? reservationSection.querySelector("form")
