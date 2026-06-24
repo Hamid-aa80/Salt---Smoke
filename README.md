@@ -1,8 +1,10 @@
 # Salt & Smoke
+---
 
 Salt & Smoke is an interactive restaurant web application built as a portfolio project. It helps users browse dishes, book a table, subscribe to updates, and submit feedback in a fast, mobile-friendly experience.
 
 ## Quick Start
+---
 
 ```bash
 npm install
@@ -13,6 +15,7 @@ npm start
 - API docs: `http://localhost:5000/api/docs`
 
 ## Table of Contents
+---
 
 - [Quick Start](#quick-start)
 - [Live Links](#live-links)
@@ -43,11 +46,13 @@ npm start
 - [Author](#author)
 
 ## Live Links
+---
 
 - **Live site:** https://hamid-aa80.github.io/Salt---Smoke/
 - **Repository:** https://github.com/Hamid-aa80/Salt---Smoke
 
 ## Project Purpose
+---
 
 🎯 Project Purpose (Clear Definition)
 
@@ -73,12 +78,10 @@ A clear purpose:
 “This project aims to redesign the company website to improve customer experience, increase online conversions, and strengthen brand credibility. It addresses declining engagement metrics and supports the company’s strategic goal of expanding digital presence.”
 
 ## Target Audience
-
-Here is the Salt & Smoke target audience — defined with precision, depth, and brand truth.
-This is the audience your dark‑premium, fire‑kissed, cinematic smokehouse is built for.
-🎯 Salt & Smoke — Target Audience Overview
-Salt & Smoke attracts people who want more than food — they want a mood, a moment, a memory.
 ---
+
+🎯 Salt & Smoke — Target Audience Overview
+
 
 ❤️ 1. Couples Seeking Premium Date‑Night Experiences
 Your strongest, most natural audience segment.
@@ -88,7 +91,6 @@ Your strongest, most natural audience segment.
 • Celebrate anniversaries, first dates, “just because” nights
 • Love curated cocktails, wine, and fire‑kissed dishes
 
----
 🔥 2. Young Professionals & Food‑Lovers
 People who appreciate craft cooking and premium visuals.
 • Ages 22–40
@@ -97,7 +99,6 @@ People who appreciate craft cooking and premium visuals.
 • Value quality ingredients and bold flavours
 • Seek restaurants with a strong brand identity
 
----
 🍻 3. Social Groups & Small Gatherings
 Friends who want a stylish, warm place to meet.
 • Ages 25–45
@@ -105,7 +106,6 @@ Friends who want a stylish, warm place to meet.
 • Enjoy craft beer, cocktails, shared plates
 • Prefer venues with atmosphere over loud bars
 
----
 🌙 4. Local Watford Residents Seeking Something “Different”
 People tired of the same chain restaurants.
 • Ages 28–55
@@ -113,7 +113,6 @@ People tired of the same chain restaurants.
 • Appreciate independent brands with personality
 • Seek quality, consistency, and a memorable environment
 
----
 📸 5. Aesthetic‑Driven Diners & Content Creators
 Your cinematic visuals attract this group naturally.
 • Ages 18–35
@@ -121,7 +120,6 @@ Your cinematic visuals attract this group naturally.
 • Post food, ambience, and date‑night content
 • Value design, lighting, and brand storytelling
 
----
 🧩 6. Special‑Occasion Diners
 People celebrating life moments.
 • Birthdays
@@ -130,7 +128,6 @@ People celebrating life moments.
 • Engagements
 • Family milestones
 
----
 🥃 7. Premium Casual Diners
 People who want quality without the stiffness of fine dining.
 • Ages 30–55
@@ -140,47 +137,47 @@ People who want quality without the stiffness of fine dining.
 
 
 ## User Goals
+---
 
 🎯 Salt & Smoke — User Goals
-These are the real outcomes your guests are seeking — emotional, practical, and experiential.
----
+
 ❤️ 1. To Have a Memorable Date Night
 Your guests want a place that feels intimate, cinematic, and special.
 They want to connect, talk, lean in, and feel the moment.
 → Date‑night experience
----
+
 🔥 2. To Enjoy Fire‑Kissed, High‑Quality Food
 They want bold flavours, premium ingredients, and dishes that feel crafted, not generic.
 They want to taste the smoke, the char, the heat.
 → Signature food experience
----
+
 🌙 3. To Escape Into a Cinematic Atmosphere
 Your dark‑premium ambience is a mood.
 Guests want to feel transported — warm lighting, bokeh, shadows, fire.
 → Cinematic ambience
----
+
 🍷 4. To Celebrate Something Special
 Birthdays, anniversaries, promotions, first dates, reunions.
 They want a place that feels worthy of the moment.
 → Special‑occasion experience
----
+
 📸 5. To Experience a Visually Stunning Environment
 Your guests love the aesthetic — the visuals matter.
 They want a place that looks like a film scene and photographs beautifully.
 → Aesthetic‑driven dining
----
+
 🥃 6. To Relax in a Premium but Comfortable Space
 Not stiff fine dining.
 Not loud casual dining.
 A warm, elegant middle ground.
 → Premium‑casual comfort
----
+
 🧑‍🤝‍🧑 7. To Feel Looked After
 Guests want attentive, warm, human service.
 Not rushed. Not robotic.
 They want to feel seen.
 → Hospitality experience
----
+
 🎬 8. To Leave With a Lasting Impression
 They want the night to feel like a memory — something they’ll talk about.
 Your brand is built for that.
@@ -188,10 +185,10 @@ Your brand is built for that.
 
 
 ## Business and Site Owner Goals
+---
 
 🎯 Salt & Smoke — Business & Site Owner Goals
-These are the core outcomes the business must deliver to be successful, sustainable, and scalable.
----
+
 🔥 1. Deliver a Distinctive, Premium Dining Experience
 You want Salt & Smoke to stand out in Watford as a unique, cinematic, fire‑kissed smokehouse.
 This means:
@@ -200,7 +197,7 @@ This means:
 • Memorable service
 • A recognisable brand identity
 → Premium dining experience
----
+
 💷 2. Achieve Strong, Predictable Revenue
 The business must generate stable income through:
 • High‑value date‑night bookings
@@ -209,7 +206,7 @@ The business must generate stable income through:
 • Upsells (cocktails, wine, desserts)
 • Special events
 → Revenue strategy
----
+
 🍽️ 3. Build a Loyal, Returning Customer Base
 Repeat customers are the backbone of a successful restaurant.
 Your goal is to create a place people return to for:
@@ -219,7 +216,7 @@ Your goal is to create a place people return to for:
 • Celebrations
 • “Just because” evenings
 → Customer loyalty plan
----
+
 🌙 4. Establish a Recognisable, Cinematic Brand
 Salt & Smoke should be instantly identifiable by its:
 • Dark‑premium visuals
@@ -228,7 +225,7 @@ Salt & Smoke should be instantly identifiable by its:
 • Elegant typography
 • Emotional storytelling
 → Brand identity
----
+
 👨‍🍳 5. Maintain High Food Quality & Consistency
 Your goal is to ensure every dish is:
 • Fire‑kissed
@@ -236,7 +233,7 @@ Your goal is to ensure every dish is:
 • Beautifully plated
 • Consistent every time
 → Food quality standards
----
+
 🧑‍🤝‍🧑 6. Build a Strong, Motivated Team
 A great restaurant is built on great people.
 Your goals include:
@@ -244,7 +241,7 @@ Your goals include:
 • Training them in premium hospitality
 • Creating a positive, stable work culture
 → Staff training plan
----
+
 📍 7. Position Salt & Smoke as a Watford Destination
 You want the restaurant to become:
 • A go‑to date‑night spot
@@ -252,7 +249,7 @@ You want the restaurant to become:
 • A place people recommend
 • A destination worth travelling for
 → Local positioning
----
+
 📸 8. Leverage Visual Content to Drive Bookings
 Your cinematic style is a business asset.
 Your goals include:
@@ -261,7 +258,7 @@ Your goals include:
 • Strong social presence
 • Visual storytelling that converts viewers into diners
 → Content strategy
----
+
 🧩 9. Ensure Operational Efficiency & Smooth Service
 Behind the scenes, your goals include:
 • Fast table turnover (without rushing guests)
@@ -270,7 +267,7 @@ Behind the scenes, your goals include:
 • Cost control
 • Minimal waste
 → Operational plan
----
+
 🚀 10. Build a Scalable Concept for Future Expansion
 Salt & Smoke should be designed with growth in mind:
 • Second location potential
@@ -279,56 +276,53 @@ Salt & Smoke should be designed with growth in mind:
 • Replicable ambience and menu
 → Expansion strategy
 
-
-
 ## User Stories
+---
 
 🔥 Salt & Smoke — User Stories
-Each story follows the format:
-As a [type of user], I want [goal], so that [outcome].
----
+
 ❤️ 1. Date‑Night Couple
 • As a couple, I want a warm, intimate table, so that we can connect and enjoy a romantic evening together.
 • As a partner, I want the ambience to feel cinematic, so that the night feels special and memorable.
 • As a guest, I want beautifully presented, fire‑kissed dishes, so that the food becomes part of the experience.
----
+
 🔥 2. Food‑Lover / Young Professional
 • As a food lover, I want bold, smoky flavours, so that I feel I’m eating something crafted and unique.
 • As a young professional, I want a premium but relaxed environment, so that I can unwind after work without feeling rushed.
 • As a diner, I want consistent quality, so that I trust the restaurant every time I visit.
----
+
 🍷 3. Social Group / Friends
 • As a group of friends, I want a stylish place to meet, so that we can enjoy a night out that feels elevated.
 • As a guest, I want great cocktails and sharable dishes, so that the evening feels social and fun.
----
+
 🎉 4. Special‑Occasion Guest
 • As someone celebrating, I want the atmosphere to feel premium, so that my occasion feels important.
 • As a host, I want smooth service, so that my guests feel looked after.
----
+
 📸 5. Aesthetic‑Driven Guest / Content Creator
 • As a content creator, I want visually stunning lighting and plating, so that I can capture beautiful photos and videos.
 • As a guest, I want the environment to feel cinematic, so that the experience feels share‑worthy.
----
+
 🥃 6. Premium‑Casual Diner
 • As a diner, I want premium food without fine‑dining stiffness, so that I feel comfortable and relaxed.
 • As a regular, I want friendly, warm staff, so that I feel welcomed every time I visit.
----
+
 🌙 7. Local Resident
 • As a local, I want a unique restaurant in Watford, so that I don’t have to travel far for a premium experience.
 • As a returning guest, I want consistency, so that Salt & Smoke becomes my go‑to spot.
 
 ## Core Features (Brand Experience)
+---
 
 🔥 Salt & Smoke — Core Features
-Each feature is written as a functional, experiential, or emotional capability of the restaurant.
----
+
 🍽️ Fire‑Kissed Signature Menu
 • Smoked, charred, flame‑finished dishes
 • Premium ingredients
 • Bold, layered flavours
 • Consistent plating and presentation
 This is the heart of the brand.
----
+
 🌙 Dark‑Premium Cinematic Ambience
 • Low, warm lighting
 • Candle bokeh
@@ -336,14 +330,14 @@ This is the heart of the brand.
 • Fire reflections
 • Matte‑black textures
 The restaurant feels like a film scene.
----
+
 ❤️ Date‑Night Focused Seating
 • Intimate table spacing
 • Romantic lighting
 • Quiet, warm atmosphere
 • Designed for connection
 Your strongest audience segment.
----
+
 🥃 Premium Drinks Experience
 • Curated cocktails
 • Quality wines
@@ -351,42 +345,42 @@ Your strongest audience segment.
 • Elegant glassware
 • Fire‑kissed garnishes
 Premium taste, casual attitude.
----
+
 🎧 Cinematic Soundscape
 • Warm ambient hum
 • Subtle fire crackle
 • Low‑tempo background music
 • No harsh highs or loudness
 Sound completes the mood.
----
+
 📸 Visually Stunning Environment
 • Photogenic plating
 • Cinematic lighting
 • Bokeh‑rich backgrounds
 • Shadow‑driven compositions
 Perfect for organic social sharing.
----
+
 🧑‍🤝‍🧑 Warm, Human Hospitality
 • Friendly, attentive staff
 • Knowledgeable but not pushy
 • Relaxed tone
 • Consistent service rituals
 Premium without pretension.
----
+
 🪑 Premium‑Casual Comfort
 • Comfortable seating
 • Relaxed pacing
 • No fine‑dining stiffness
 • No casual‑dining chaos
 The perfect middle ground.
----
+
 🎉 Special‑Occasion Ready
 • Birthday and anniversary‑friendly
 • Celebration‑ready ambience
 • Optional dessert messages
 • Staff trained for special moments
 A place worth dressing up for.
----
+
 📱 Modern Digital Experience
 • Online booking
 • Social‑first content
@@ -394,13 +388,11 @@ A place worth dressing up for.
 • Seamless communication
 Your digital presence matches your physical one.
 
-
 ## Future Features
+---
 
 🔥 Salt & Smoke — Signature Food Experience
-Bold, fire‑kissed, smoke‑driven dishes crafted with premium ingredients and plated with cinematic elegance — delivering deep flavour, warmth, and visual drama in every bite.
-This is what makes Salt & Smoke, Salt & Smoke.
----
+
 🍖 1. Fire‑Kissed Cooking
 The defining technique of the brand.
 • Open‑flame finishing
@@ -409,7 +401,7 @@ The defining technique of the brand.
 • Slow‑cooked tenderness
 • Ember‑kissed aromatics
 Every dish carries the unmistakable signature of flame.
----
+
 🌫️ 2. Smokehouse Depth
 Not overpowering — refined.
 • Subtle wood‑smoke layers
@@ -417,7 +409,7 @@ Not overpowering — refined.
 • Slow infusion for tenderness
 • Distinct but elegant aroma
 Smoke is treated like a seasoning, not a gimmick.
----
+
 🍽️ 3. Premium Ingredients
 Quality is non‑negotiable.
 • High‑grade meats
@@ -425,7 +417,7 @@ Quality is non‑negotiable.
 • House‑made rubs and marinades
 • Carefully sourced spices
 Premium casual means premium ingredients, always.
----
+
 🎨 4. Cinematic Plating
 The food must look as good as it tastes.
 • Dark plates for contrast
@@ -434,7 +426,7 @@ The food must look as good as it tastes.
 • Clean, bold presentation
 • Bokeh‑friendly compositions
 Every dish is a photo moment.
----
+
 🌶️ 5. Bold, Confident Flavour Profiles
 Salt & Smoke is not subtle — it’s intentional.
 • Sweet heat
@@ -443,7 +435,7 @@ Salt & Smoke is not subtle — it’s intentional.
 • Balanced acidity
 • Rich, smoky undertones
 Flavour that feels crafted, layered, and memorable.
----
+
 🥩 6. Hero Dishes With Identity
 Your menu has signature stars.
 • Brisket
@@ -452,7 +444,7 @@ Your menu has signature stars.
 • Charred vegetables
 • Fire‑kissed seafood
 These become the dishes people talk about.
----
+
 🍷 7. Perfect Pairings
 Food and drink work together.
 • Smoke‑friendly wines
@@ -460,7 +452,7 @@ Food and drink work together.
 • Rich, bold beers
 • House‑infused spirits
 Pairings elevate the entire experience.
----
+
 ❤️ 8. Emotional Eating Experience
 Salt & Smoke food is designed to make people feel:
 • Warm
@@ -470,7 +462,8 @@ Salt & Smoke food is designed to make people feel:
 • Impressed
 It’s comfort food elevated to cinematic dining.
 
-## Wireframes
+## Wireframe
+----
 
 ### Wireframe screenshots
 
@@ -497,6 +490,7 @@ It’s comfort food elevated to cinematic dining.
 
 
 ## Color Scheme
+---
 
 - #fea116 ![primary ](README-img/primary.png)
 
@@ -510,6 +504,7 @@ It’s comfort food elevated to cinematic dining.
 
 
 ## Technologies Used
+---
 
 - HTML
 - CSS
@@ -526,6 +521,7 @@ It’s comfort food elevated to cinematic dining.
 - TinyPNG to convert images to webp
 
 ## Testing
+---
 
 ### Manual Testing
 
@@ -570,6 +566,7 @@ My project was deployed using GitHub:
 ![PageSpeed Insights](README-img/Lighthouse-test-Mobile.jpg)
 
 ## Screenshots
+----
 
 ### Navbar
 
@@ -601,6 +598,7 @@ My project was deployed using GitHub:
 ![Contact page](README-img/Contact-page.png)
 
 ## Deployment (Original Process Notes)
+---
 
 This project was developed using [VS Code](https://code.visualstudio.com/), committed to git and pushed to GitHub using the built-in function within VS Code.
 
@@ -624,6 +622,7 @@ To run locally, you can clone this repository directly into the editor of your c
 ![GitHub clone](README-img/GitHub-clone.png)
 
 ## Credits
+---
 
 ### Content
 - The welcome paragraph on the homepage.
@@ -640,6 +639,7 @@ To run locally, you can clone this repository directly into the editor of your c
 - All media and photos sourced from Google.
 
 ## Purpose and Value
+---
 
 This application is built to deliver practical value to users:
 
@@ -651,6 +651,7 @@ This application is built to deliver practical value to users:
 
 
 ## Features (Application)
+---
 
 - Responsive frontend (`index.html`, `style.css`, `main.js`)
 - Sticky navbar with active section behavior
@@ -665,6 +666,7 @@ This application is built to deliver practical value to users:
   - `GET /api/health`, `GET /api/docs`
 
 ## Development Cycle (Documented with Commit Evidence)
+---
 
 The project was developed iteratively:
 
@@ -691,6 +693,7 @@ The project was developed iteratively:
 | `cc5b2cc` | `feat: implement guest feedback wall with image support and time formatting` | Feedback feature implementation |
 
 ## Code Separation and External-Source Attribution
+---
 
 ### Custom project code
 
@@ -723,6 +726,7 @@ Attribution is applied in two places:
 2. **In this README:** this section explicitly lists all external dependencies.
 
 ## Technologies
+---
 
 ### Frontend
 
@@ -746,6 +750,7 @@ Attribution is applied in two places:
 - Playwright (`@playwright/test`)
 
 ## Installation and Usage
+---
 
 ### Prerequisites
 
@@ -780,6 +785,7 @@ npm test
 ```
 
 ## Project structure
+---
 
 ```text
 index.html
@@ -795,15 +801,18 @@ README-img/
 ```
 
 ## Deployment (Current)
+---
 
 Frontend deployment is on GitHub Pages:
 
 - https://hamid-aa80.github.io/Salt---Smoke/
 
 ## Disclaimer
+---
 
 This is a portfolio/educational project.
 
 ## Author
+---
 
 Built by Hamid.
