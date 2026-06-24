@@ -24,6 +24,7 @@
 - [API Endpoints](#api-endpoints)
 - [Testing](#testing)
 - [Lighthouse Performance Testing](#-lighthouse-performance-testing)
+- [Device Mockup](#device-mockup)
 - [Screenshots](#screenshots)
 - [Deployment](#deployment)
 - [Environment Configuration](#environment-configuration)
@@ -393,6 +394,16 @@ The Lighthouse audit ensures optimal user experience on all devices and connecti
 
 ---
 
+## 📱 Device Mockup
+
+<p align="center">
+  <img src="README-img/Home-desktop.png" alt="Salt & Smoke device mockup" width="700" />
+</p>
+
+*Device mockup preview of the Salt & Smoke homepage*
+
+---
+
 ## 📸 Screenshots
 
 ### Navbar
@@ -695,19 +706,6 @@ We welcome contributions! To contribute:
 
 ---
 
-## 📄 License
-
-This project is open source and available under the MIT License.
-
----
-
-## 📞 Support
-
-For issues, questions, or suggestions:
-- **GitHub Issues:** [Open an issue](https://github.com/Hamid-aa80/Salt---Smoke/issues)
-- **Repository:** https://github.com/Hamid-aa80/Salt---Smoke
-
----
 
 ## 🎉 Acknowledgments
 
@@ -722,4 +720,4 @@ For issues, questions, or suggestions:
 
 **Made with ❤️ by Hamid**
 
-Last Updated: June 24, 2024
+Last Updated: June , 2026
