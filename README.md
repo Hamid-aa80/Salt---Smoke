@@ -16,6 +16,7 @@
 - [Live Demo](#live-demo)
 - [Features](#features)
 - [Tech Stack](#tech-stack)
+- [Color Scheme](#-color-scheme)
 - [Project Structure](#project-structure)
 - [Getting Started](#getting-started)
 - [Installation](#installation)
@@ -110,6 +111,22 @@ The website provides an exceptional user experience across all devices (mobile, 
 ### Development & Testing
 - **Playwright** - End-to-end testing framework
 - **npm** - Package management
+
+---
+
+## 🎨 Color Scheme
+
+The Salt & Smoke brand identity uses a sophisticated three-color palette that combines warmth with elegance:
+
+![Color Scheme](README-img/color-scheme.svg)
+
+| Color | Hex Code | Usage |
+|-------|----------|-------|
+| **Primary Orange** | `#fea116` | Buttons, accents, primary CTAs, and brand highlights |
+| **Dark Navy** | `#0f1728` | Text, backgrounds, headers, and dark sections |
+| **Light Alice Blue** | `#f1f8ff` | Background, light sections, and text contrast |
+
+These colors create a premium, restaurant-quality aesthetic that conveys warmth, sophistication, and the smokehouse dining experience.
 
 ---
 
