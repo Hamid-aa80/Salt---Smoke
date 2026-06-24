@@ -343,24 +343,24 @@ npm test
 The Playwright test suite (`tests/site.spec.ts`) covers:
 
 ✅ **Happy Path Tests**
-- Reservation form submission and success
-- Newsletter signup validation and confirmation
-- Menu filtering and search functionality
+- Reservation form submission and success flow
+- Newsletter signup and duplicate-subscription handling
+- Menu filtering, favourites, and search functionality
 
 ✅ **Validation Tests**
-- Invalid reservation data handling
-- Error message display
-- Form validation feedback
+- Invalid reservation input (name, email, date, and request length)
+- Invalid newsletter data handling and feedback messages
+- Submit-button enabled/disabled behavior for valid vs invalid states
 
 ✅ **UI/UX Tests**
 - Mobile navigation behavior
-- Menu category filtering
-- Smooth scrolling functionality
-- Back-to-top button
+- Responsive rendering across mobile, tablet, and desktop breakpoints
+- Menu category filtering and favourites filtering
 
 ✅ **Quality Assurance Tests**
-- All internal links are reachable
-- No console errors on page load
+- No uncaught console/page errors during each test scenario
+- Internal links and in-page anchors are reachable (no broken links)
+- Reservation draft persistence and submit-page fallback regressions
 - Accessibility contrast compliance
 - HTML validation (W3C)
 - CSS validation (W3C)
