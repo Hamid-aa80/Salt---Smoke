@@ -51,6 +51,7 @@ The website provides an exceptional user experience across all devices (mobile, 
 
 - **Live Website:** https://hamid-aa80.github.io/Salt---Smoke/
 - **GitHub Repository:** https://github.com/Hamid-aa80/Salt---Smoke
+- **Deployment:** Deployed using GitHub Pages via GitHub Actions
 
 ---
 
