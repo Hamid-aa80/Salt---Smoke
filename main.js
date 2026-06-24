@@ -419,6 +419,128 @@ document.addEventListener("DOMContentLoaded", () => {
       const feedbackStorageKey = "salt-smoke-feedback-submissions";
       const maxImageSizeBytes = 2 * 1024 * 1024;
       const allowedImageTypes = new Set(["image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp"]);
+      const formatFeedbackTime = submittedAt => {
+        const parsedDate = new Date(submittedAt);
+        if (Number.isNaN(parsedDate.getTime())) return "just now";
+
+        return parsedDate.toLocaleString("en-GB", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit"
+        });
+      };
+      const readFeedbackSubmissions = () => {
+        const savedSubmissionsRaw = localStorage.getItem(feedbackStorageKey);
+        if (!savedSubmissionsRaw) return [];
+
+        try {
+          const parsedSubmissions = JSON.parse(savedSubmissionsRaw);
+          return Array.isArray(parsedSubmissions) ? parsedSubmissions : [];
+        } catch (error) {
+          localStorage.removeItem(feedbackStorageKey);
+          return [];
+        }
+      };
+      const feedbackWall = document.createElement("section");
+      feedbackWall.className = "rounded border border-light-subtle mt-4 p-3";
+      feedbackWall.setAttribute("aria-live", "polite");
+      feedbackWall.setAttribute("aria-atomic", "true");
+      feedbackWall.innerHTML = `
+        <h5 class="text-light mb-3">Guest photo wall</h5>
+        <div class="d-flex gap-3 align-items-start flex-column flex-sm-row">
+          <img data-feedback-wall-image class="rounded border border-light-subtle d-none" alt="Guest feedback image" style="width: 96px; height: 96px; object-fit: cover;">
+          <div class="flex-grow-1">
+            <p data-feedback-wall-title class="mb-2 text-light-emphasis small"></p>
+            <p data-feedback-wall-message class="mb-2 text-light"></p>
+            <p data-feedback-wall-meta class="mb-0 text-white-50 small"></p>
+          </div>
+        </div>
+        <div class="d-flex align-items-center justify-content-between mt-3">
+          <span data-feedback-wall-counter class="text-white-50 small"></span>
+          <div class="btn-group btn-group-sm" role="group" aria-label="Guest feedback navigation">
+            <button data-feedback-wall-previous type="button" class="btn btn-outline-light">Previous</button>
+            <button data-feedback-wall-next type="button" class="btn btn-outline-light">Next</button>
+          </div>
+        </div>
+      `;
+      feedbackForm.insertAdjacentElement("afterend", feedbackWall);
+
+      const feedbackWallImage = feedbackWall.querySelector("[data-feedback-wall-image]");
+      const feedbackWallTitle = feedbackWall.querySelector("[data-feedback-wall-title]");
+      const feedbackWallMessage = feedbackWall.querySelector("[data-feedback-wall-message]");
+      const feedbackWallMeta = feedbackWall.querySelector("[data-feedback-wall-meta]");
+      const feedbackWallCounter = feedbackWall.querySelector("[data-feedback-wall-counter]");
+      const feedbackWallPreviousButton = feedbackWall.querySelector("[data-feedback-wall-previous]");
+      const feedbackWallNextButton = feedbackWall.querySelector("[data-feedback-wall-next]");
+      let feedbackSubmissions = readFeedbackSubmissions();
+      let activeFeedbackIndex = feedbackSubmissions.length ? feedbackSubmissions.length - 1 : 0;
+
+      const renderFeedbackWall = () => {
+        if (
+          !feedbackWallImage ||
+          !feedbackWallTitle ||
+          !feedbackWallMessage ||
+          !feedbackWallMeta ||
+          !feedbackWallCounter ||
+          !feedbackWallPreviousButton ||
+          !feedbackWallNextButton
+        ) {
+          return;
+        }
+
+        if (!feedbackSubmissions.length) {
+          feedbackWallTitle.textContent = "No guest stories yet";
+          feedbackWallMessage.textContent = "Be the first to share your experience and photo.";
+          feedbackWallMeta.textContent = "";
+          feedbackWallCounter.textContent = "0 of 0";
+          feedbackWallImage.classList.add("d-none");
+          feedbackWallImage.removeAttribute("src");
+          feedbackWallPreviousButton.disabled = true;
+          feedbackWallNextButton.disabled = true;
+          return;
+        }
+
+        activeFeedbackIndex =
+          ((activeFeedbackIndex % feedbackSubmissions.length) + feedbackSubmissions.length) %
+          feedbackSubmissions.length;
+        const activeSubmission = feedbackSubmissions[activeFeedbackIndex];
+        const guestName = activeSubmission.name ? activeSubmission.name.trim() : "";
+        feedbackWallTitle.textContent = guestName ? `From ${guestName}` : "From a recent guest";
+        feedbackWallMessage.textContent = activeSubmission.message
+          ? `"${activeSubmission.message}"`
+          : "Thanks for sharing your visit with us.";
+        feedbackWallMeta.textContent = `Shared on ${formatFeedbackTime(activeSubmission.submittedAt)}`;
+        feedbackWallCounter.textContent = `${activeFeedbackIndex + 1} of ${feedbackSubmissions.length}`;
+
+        if (activeSubmission.imageDataUrl) {
+          feedbackWallImage.src = activeSubmission.imageDataUrl;
+          feedbackWallImage.classList.remove("d-none");
+        } else {
+          feedbackWallImage.classList.add("d-none");
+          feedbackWallImage.removeAttribute("src");
+        }
+
+        const hasMultipleSubmissions = feedbackSubmissions.length > 1;
+        feedbackWallPreviousButton.disabled = !hasMultipleSubmissions;
+        feedbackWallNextButton.disabled = !hasMultipleSubmissions;
+      };
+
+      if (feedbackWallPreviousButton && feedbackWallNextButton) {
+        feedbackWallPreviousButton.addEventListener("click", () => {
+          if (!feedbackSubmissions.length) return;
+          activeFeedbackIndex -= 1;
+          renderFeedbackWall();
+        });
+        feedbackWallNextButton.addEventListener("click", () => {
+          if (!feedbackSubmissions.length) return;
+          activeFeedbackIndex += 1;
+          renderFeedbackWall();
+        });
+      }
+
+      renderFeedbackWall();
       feedbackForm.noValidate = true;
       feedbackMessageInput.required = true;
       feedbackImageInput.required = true;
@@ -545,16 +667,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const imageFile = getSelectedImage();
         if (!imageFile) return;
 
-        const savedSubmissionsRaw = localStorage.getItem(feedbackStorageKey);
-        let savedSubmissions = [];
-        if (savedSubmissionsRaw) {
-          try {
-            savedSubmissions = JSON.parse(savedSubmissionsRaw);
-          } catch (error) {
-            localStorage.removeItem(feedbackStorageKey);
-            savedSubmissions = [];
-          }
-        }
+        const savedSubmissions = readFeedbackSubmissions();
         const imageDataUrl = await readAsDataUrl(imageFile);
         savedSubmissions.push({
           name: feedbackNameInput.value.trim(),
@@ -566,6 +679,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const recentSubmissions = savedSubmissions.slice(-10);
         localStorage.setItem(feedbackStorageKey, JSON.stringify(recentSubmissions));
+        feedbackSubmissions = recentSubmissions;
+        activeFeedbackIndex = feedbackSubmissions.length - 1;
+        renderFeedbackWall();
       };
 
       feedbackForm.addEventListener("submit", async event => {
