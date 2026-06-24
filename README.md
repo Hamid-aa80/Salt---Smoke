@@ -356,6 +356,10 @@ This tests all API endpoints directly.
 
 ## 📸 Screenshots
 
+### Navbar
+![Navbar](README-img/Navbar.png)
+*Responsive navigation bar with logo and menu items*
+
 ### Homepage
 ![Salt & Smoke Homepage](README-img/Home-page.png)
 *Stunning hero section with call-to-action*
