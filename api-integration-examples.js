@@ -51,6 +51,40 @@ const showMenuMessage = (variant, message) => {
   renderFeedbackMessage(feedbackContainer, variant, message);
 };
 
+const reservationNamePattern = /^[A-Za-z][A-Za-z\s'-]{1,}$/;
+const reservationEmailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+const validateReservationPayload = data => {
+  if (!reservationNamePattern.test(data.name)) {
+    return "Please enter a valid name.";
+  }
+
+  if (!reservationEmailPattern.test(data.email)) {
+    return "Please enter a valid email address.";
+  }
+
+  if (!data.date) {
+    return "Please select a reservation date.";
+  }
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const selectedDate = new Date(`${data.date}T00:00:00`);
+  if (Number.isNaN(selectedDate.getTime()) || selectedDate < today) {
+    return "Reservation date must be today or later.";
+  }
+
+  if (!Number.isInteger(data.guests) || data.guests < 1 || data.guests > 20) {
+    return "Please enter a valid guest number.";
+  }
+
+  if (!data.request || data.request.length < 5) {
+    return "Please enter at least 5 characters in your request.";
+  }
+
+  return null;
+};
+
 /**
  * Example: Handle Reservation Form Submission
  * 
@@ -61,18 +95,28 @@ export async function handleReservationSubmit(event) {
 
   // Get form data
   const formData = new FormData(event.target);
+  const requestValue = (formData.get("request") || formData.get("requests") || "").toString().trim();
   const data = {
-    name: formData.get("name"),
-    email: formData.get("email"),
-    date: formData.get("date"),
-    time: formData.get("time"),
+    name: (formData.get("name") || "").toString().trim(),
+    email: (formData.get("email") || "").toString().trim(),
+    date: (formData.get("date") || "").toString(),
+    time: (formData.get("time") || "").toString(),
     guests: parseInt(formData.get("guests"), 10),
-    requests: formData.get("requests") || ""
+    request: requestValue
   };
+
+  const validationMessage = validateReservationPayload(data);
+  if (validationMessage) {
+    showMessageForForm(event.target, "danger", validationMessage);
+    return;
+  }
 
   try {
     // Submit to API
-    const result = await reservationsAPI.create(data);
+    const result = await reservationsAPI.create({
+      ...data,
+      requests: data.request
+    });
 
     if (result.success) {
       showMessageForForm(
