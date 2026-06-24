@@ -168,20 +168,6 @@ test("filters menu items and keeps the page free of broken same-origin links", a
   expect(invalidLocalTargets, invalidLocalTargets.join("\n")).toEqual([]);
 });
 
-test("saves favourite menu items and filters to them", async ({ page }) => {
-  await page.locator("#menu").scrollIntoViewIfNeeded();
-
-  const burgerFavouriteButton = page.getByRole("button", { name: /save juicy burger to favourites/i });
-  await burgerFavouriteButton.click();
-
-  await expect(page.getByText("1 favourite dish saved")).toBeVisible();
-  await expect(page.getByRole("button", { name: /favourites \(1\)/i })).toBeEnabled();
-
-  await page.getByRole("button", { name: /favourites \(1\)/i }).click();
-  await expect(page.locator('[data-menu-name="Juicy Burger"]')).toBeVisible();
-  await expect(page.locator('[data-menu-name="Grilled Salmon"]')).toBeHidden();
-});
-
 test("restores reservation draft after reload (bug-fix regression)", async ({ page }) => {
   const tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().split("T")[0];
   await page.locator("#reservationForm").scrollIntoViewIfNeeded();

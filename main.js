@@ -183,12 +183,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const menuTotalCount = menuSection.querySelector("#menuTotalCount");
     const menuEmptyState = menuSection.querySelector("#menuEmptyState");
     const menuFilterSummary = menuSection.querySelector("#menuFilterSummary");
-    const menuFilterGroup = menuSection.querySelector(".menu-filter-group");
-    const menuStatusRow = menuSection.querySelector(".d-flex.justify-content-between");
     const menuSort = menuSection.querySelector("#menuSort");
     const menuResetFilters = menuSection.querySelector("#menuResetFilters");
     const menuGrid = menuSection.querySelector("#tab-1 .row.g-4");
-    const menuFavouritesStorageKey = "salt-smoke-menu-favourites";
 
     const getMenuCardName = card =>
       card.getAttribute("data-menu-name") ||
@@ -205,46 +202,6 @@ document.addEventListener("DOMContentLoaded", () => {
         .toLowerCase()
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "");
-    const readFavouriteMenuItems = () => {
-      const storedItems = localStorage.getItem(menuFavouritesStorageKey);
-      if (!storedItems) return new Set();
-
-      try {
-        const parsedItems = JSON.parse(storedItems);
-        if (!Array.isArray(parsedItems)) {
-          localStorage.removeItem(menuFavouritesStorageKey);
-          return new Set();
-        }
-
-        return new Set(
-          parsedItems
-            .filter(item => typeof item === "string")
-            .map(item => item.trim())
-            .filter(Boolean)
-        );
-      } catch (error) {
-        localStorage.removeItem(menuFavouritesStorageKey);
-        return new Set();
-      }
-    };
-    const favouriteMenuItems = readFavouriteMenuItems();
-    const writeFavouriteMenuItems = () => {
-      if (!favouriteMenuItems.size) {
-        localStorage.removeItem(menuFavouritesStorageKey);
-        return;
-      }
-
-      localStorage.setItem(menuFavouritesStorageKey, JSON.stringify([...favouriteMenuItems].sort()));
-    };
-    const isFavouriteMenuItem = card => favouriteMenuItems.has(getMenuCardName(card));
-    const favouriteSummary = document.createElement("p");
-    favouriteSummary.className = "text-primary mb-0 fw-semibold";
-    favouriteSummary.setAttribute("aria-live", "polite");
-    favouriteSummary.setAttribute("aria-atomic", "true");
-
-    if (menuStatusRow) {
-      menuStatusRow.appendChild(favouriteSummary);
-    }
 
     if (menuTotalCount) {
       menuTotalCount.textContent = String(menuCards.length);
@@ -262,87 +219,18 @@ document.addEventListener("DOMContentLoaded", () => {
       menuTitle.insertAdjacentElement("afterend", spotlight);
     }
 
-    const updateFavouriteSummary = favouritesFilterButton => {
-      const totalFavourites = favouriteMenuItems.size;
-      favouriteSummary.textContent = totalFavourites
-        ? `${totalFavourites} favourite dish${totalFavourites === 1 ? "" : "es"} saved`
-        : "Save favourites to build your shortlist.";
-
-      if (favouritesFilterButton) {
-        favouritesFilterButton.disabled = totalFavourites === 0;
-        favouritesFilterButton.textContent = totalFavourites
-          ? `Favourites (${totalFavourites})`
-          : "Favourites";
-      }
-    };
-
-    const updateFavouriteButtonState = (button, card) => {
-      const cardName = getMenuCardName(card);
-      const isFavourite = favouriteMenuItems.has(cardName);
-      button.className = `btn btn-sm ${isFavourite ? "btn-primary" : "btn-outline-primary"}`;
-      button.setAttribute("aria-pressed", String(isFavourite));
-      button.setAttribute(
-        "aria-label",
-        `${isFavourite ? "Remove" : "Save"} ${cardName} ${isFavourite ? "from" : "to"} favourites`
-      );
-      button.title = isFavourite ? `Remove ${cardName} from favourites` : `Save ${cardName} to favourites`;
-      button.innerHTML = `<i class="fa-${isFavourite ? "solid" : "regular"} fa-heart me-1"></i>${isFavourite ? "Saved" : "Save"}`;
-    };
-
-    menuCards.forEach(card => {
-      const menuCard = card.querySelector(".menu-card");
-      if (!menuCard) return;
-
-      menuCard.classList.add("position-relative");
-
-      const favouriteButton = document.createElement("button");
-      favouriteButton.type = "button";
-      favouriteButton.style.position = "absolute";
-      favouriteButton.style.top = "0.75rem";
-      favouriteButton.style.right = "0.75rem";
-      favouriteButton.style.zIndex = "1";
-      updateFavouriteButtonState(favouriteButton, card);
-
-      favouriteButton.addEventListener("click", () => {
-        const cardName = getMenuCardName(card);
-        if (favouriteMenuItems.has(cardName)) {
-          favouriteMenuItems.delete(cardName);
-        } else {
-          favouriteMenuItems.add(cardName);
-        }
-
-        writeFavouriteMenuItems();
-        updateFavouriteButtonState(favouriteButton, card);
-        menuSection.dispatchEvent(new CustomEvent("menu:favourites-updated"));
-      });
-
-      menuCard.appendChild(favouriteButton);
-    });
-
     if (menuCards.length && filterButtons.length) {
       let activeFilter = "all";
       let searchTerm = menuSearch ? normalizeText(menuSearch.value.trim()) : "";
       let activeSort = menuSort ? menuSort.value : "recommended";
-      let favouritesFilterButton = null;
       const defaultMenuOrder = [...menuCards];
       const filterLabelMap = {
         all: "all dishes",
         breakfast: "breakfast dishes",
         lunch: "lunch dishes",
         dinner: "dinner dishes",
-        drinks: "drinks",
-        favorites: "favourite dishes"
+        drinks: "drinks"
       };
-
-      if (menuFilterGroup) {
-        favouritesFilterButton = document.createElement("button");
-        favouritesFilterButton.type = "button";
-        favouritesFilterButton.className = "btn btn-outline-primary";
-        favouritesFilterButton.dataset.menuFilter = "favorites";
-        favouritesFilterButton.setAttribute("aria-pressed", "false");
-        menuFilterGroup.appendChild(favouritesFilterButton);
-        filterButtons.push(favouritesFilterButton);
-      }
 
       const sortMenuCards = () => {
         if (!menuGrid) return;
@@ -386,11 +274,9 @@ document.addEventListener("DOMContentLoaded", () => {
             .split(/\s+/)
             .filter(Boolean);
           const menuName = normalizeText(getMenuCardName(card));
-          const matchesFilter =
-            activeFilter === "all" || activeFilter === "favorites" || categories.includes(activeFilter);
-          const matchesFavourite = activeFilter !== "favorites" || isFavouriteMenuItem(card);
+          const matchesFilter = activeFilter === "all" || categories.includes(activeFilter);
           const matchesSearch = !searchTerm || menuName.includes(searchTerm);
-          const isVisible = matchesFilter && matchesFavourite && matchesSearch;
+          const isVisible = matchesFilter && matchesSearch;
 
           card.classList.toggle("d-none", !isVisible);
           if (isVisible) visibleCount += 1;
@@ -402,10 +288,7 @@ document.addEventListener("DOMContentLoaded", () => {
           menuVisibleCount.textContent = String(visibleCount);
         }
         if (menuEmptyState) {
-          menuEmptyState.textContent =
-            activeFilter === "favorites"
-              ? "No favourite dishes matched your current search."
-              : "No menu items matched your filters.";
+          menuEmptyState.textContent = "No menu items matched your filters.";
           menuEmptyState.classList.toggle("d-none", visibleCount !== 0);
         }
         updateFilterSummary(visibleCount);
@@ -455,21 +338,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       }
 
-      menuSection.addEventListener("menu:favourites-updated", () => {
-        menuCards.forEach(card => {
-          const favouriteButton = card.querySelector(".menu-card button[type=\"button\"]");
-          if (favouriteButton) {
-            updateFavouriteButtonState(favouriteButton, card);
-          }
-        });
-
-        updateFavouriteSummary(favouritesFilterButton);
-        if (activeFilter === "favorites") {
-          updateMenuVisibility();
-        }
-      });
-
-      updateFavouriteSummary(favouritesFilterButton);
       setActiveFilter("all");
     }
   }
