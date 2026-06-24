@@ -1135,13 +1135,29 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    sessionStorage.setItem(
-      reservationSuccessKey,
-      JSON.stringify({
-        name: nameInput.value.trim(),
-        date: dateInput.value,
-        guests: peopleSelect.value
-      })
+    try {
+      sessionStorage.setItem(
+        reservationSuccessKey,
+        JSON.stringify({
+          name: nameInput.value.trim(),
+          date: dateInput.value,
+          guests: peopleSelect.value
+        })
+      );
+    } catch (error) {
+      event.preventDefault();
+      showAlertMessage(
+        reservationFeedback,
+        "danger",
+        "We couldn't save your reservation confirmation details. Please allow browser storage and try again."
+      );
+      return;
+    }
+
+    showAlertMessage(
+      reservationFeedback,
+      "success",
+      "Your reservation details look good. Taking you to your confirmation page now."
     );
     [nameInput, emailInput, dateInput, peopleSelect, messageInput].forEach(clearFieldValidity);
     localStorage.removeItem(storageKey);

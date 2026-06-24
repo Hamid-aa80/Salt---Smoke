@@ -16,9 +16,33 @@ const extractResponseMessage = payload => {
   return null;
 };
 
+const parseResponsePayload = async response => {
+  const contentType = response.headers.get("content-type") || "";
+  const isJson = contentType.includes("application/json");
+
+  if (isJson) {
+    return response.json();
+  }
+
+  const rawText = await response.text();
+  if (!rawText.trim()) return null;
+
+  try {
+    return JSON.parse(rawText);
+  } catch (error) {
+    return { message: rawText };
+  }
+};
+
 const requestJson = async (url, options = {}, fallbackErrorMessage = "Request failed.") => {
-  const response = await fetch(url, options);
-  const payload = await response.json();
+  let response;
+  try {
+    response = await fetch(url, options);
+  } catch (error) {
+    throw new Error("We couldn't reach the server. Please check your connection and try again.");
+  }
+
+  const payload = await parseResponsePayload(response);
 
   if (!response.ok) {
     const apiMessage = extractResponseMessage(payload);
