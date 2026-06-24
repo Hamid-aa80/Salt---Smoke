@@ -1,11 +1,13 @@
 # Salt & Smoke
 
-Salt & Smoke is a responsive restaurant website and portfolio project focused on a premium smokehouse dining experience.
+Salt & Smoke is a responsive restaurant website and portfolio project for a London smokehouse concept.  
+The live site combines a branded frontend (`index.html`) with interactive booking/newsletter/feedback UX and a local Express + SQLite API (`server.js`) for data workflows.
 
 ![Homepage](README-img/Home-page.png)
 
 ## Table of Contents
 
+- [Assessment Rubric Mapping (All)](#assessment-rubric-mapping-all)
 - [About the Website](#about-the-website)
 - [UX](#ux)
 - [User Stories](#user-stories)
@@ -32,9 +34,32 @@ Salt & Smoke is a responsive restaurant website and portfolio project focused on
 
 ---
 
+## Assessment Rubric Mapping (All)
+
+This README is structured to satisfy common criteria across **Code Institute**, **university coursework/report rubrics**, and **general software project rubrics**.
+
+| Rubric area | Where covered in this README |
+|---|---|
+| Problem/context and project purpose | About the Website, UX |
+| User-centered planning | User Stories, Acceptance Criteria |
+| Scope and delivery planning | Development Tasks |
+| Discovery and design process | Research Before Starting Wireframe Mock-ups, Wireframe Mock-ups |
+| Implemented functionality | Features |
+| Visual design system | Typography and Colour Palette |
+| Technical implementation | Technologies Used, Code |
+| Verification and evidence | Testing, Manual Testing, Technologies Used for Testing |
+| Quality/performance/accessibility checks | Lighthouse for Mobile and Desktop, W3C HTML Validation, W3C CSS Validation |
+| Release and hosting | Deployment |
+| Attribution and compliance | Credits, Content, Media, Disclaimer |
+
+![Assessment evidence overview](README-img/Home-desktop.png)
+
+---
+
 ## About the Website
 
-Salt & Smoke presents a modern restaurant brand online, with clear navigation, strong visual identity, reservation flow, menu exploration, newsletter signup, and guest feedback interactions.
+Salt & Smoke presents a complete restaurant journey online: discover dishes, check service highlights, browse menu categories, reserve a table, and stay engaged through newsletter and guest feedback.
+The site content reflects the project brand identity, including contact details (`+44 20 7946 0958`, `hello@saltandsmoke.co.uk`) and smokehouse-focused messaging.
 
 ![Service section](README-img/Service-page.png)
 
@@ -42,7 +67,13 @@ Salt & Smoke presents a modern restaurant brand online, with clear navigation, s
 
 ## UX
 
-The UX approach is built around quick decision-making: discover dishes, trust the brand, and book a table with minimal friction across mobile, tablet, and desktop.
+The UX strategy is conversion-first for Salt & Smoke:
+- **Discover quickly:** clear hero message and service value blocks
+- **Choose confidently:** searchable/filterable menu with visible counts
+- **Act fast:** prominent reservation CTAs in hero, navbar, and footer
+- **Stay engaged:** validated newsletter and guest feedback flows
+
+The interaction model is tuned for mobile-first behavior and then scaled for tablet/desktop.
 
 ![Mobile UX view](README-img/Homepage-mobile.png)
 
@@ -100,14 +131,15 @@ The UX approach is built around quick decision-making: discover dishes, trust th
 
 ## Research Before Starting Wireframe Mock-ups
 
-Before wireframing, research focused on:
+Before wireframing, research for Salt & Smoke focused on:
 
 - Restaurant landing-page patterns and CTA placement.
 - Mobile-first interaction priorities.
 - Visual hierarchy for menu-heavy hospitality pages.
 - Color/contrast standards for accessibility.
 
-This informed layout flow: Hero -> Value/Service -> Menu -> Reservation -> Team -> Footer conversion blocks.
+This informed the final Salt & Smoke layout flow:
+**Hero -> Service Trust Blocks -> Menu Discovery -> Reservation Conversion -> Team Credibility -> Footer CTA + Newsletter/Feedback**
 
 ![Research reference](README-img/Read-More-Page.png)
 
@@ -115,7 +147,7 @@ This informed layout flow: Hero -> Value/Service -> Menu -> Reservation -> Team 
 
 ## Wireframe Mock-ups
 
-Wireframe thinking translated into structured responsive sections for desktop, tablet, and mobile breakpoints.
+Wireframe planning translated directly into the implemented responsive sections and spacing system used in the live Salt & Smoke pages.
 
 ![Desktop wireframe direction](README-img/Home-desktop.png)
 ![Tablet wireframe direction](README-img/Home-tablet.png)
@@ -125,14 +157,14 @@ Wireframe thinking translated into structured responsive sections for desktop, t
 
 ## Features
 
-- Responsive Bootstrap-based layout
-- Sticky navigation + smooth anchor scrolling
-- Mobile navbar behavior with collapse support
-- Dynamic menu spotlight
-- Menu search and category filtering
-- Reservation form validation + draft persistence
-- Newsletter validation + user feedback alerts
-- Guest feedback submission with image preview and gallery wall
+- Responsive Bootstrap-based layout tailored to Salt & Smoke content blocks
+- Sticky navigation with active-section highlighting and smooth anchor scrolling
+- Strengthened mobile navbar behavior with tested collapse/open navigation flow
+- Dynamic daily "Chef's pick" spotlight in menu section
+- Menu search + category filter chips + clear filter reset
+- Reservation form validation, inline alerts, and local draft persistence
+- Newsletter validation (required/format/length) with clear user feedback
+- Guest feedback submission with image preview and rotating local photo wall
 - Back-to-top control and reduced-motion support
 
 ![Menu page](README-img/Menu-page.png)
@@ -148,6 +180,9 @@ Wireframe thinking translated into structured responsive sections for desktop, t
   - Light: `#f1f8ff`
 
 ![Colour palette](README-img/color-scheme.svg)
+![Primary colour swatch](README-img/primary.png)
+![Dark colour swatch](README-img/dark.png)
+![Light colour swatch](README-img/light.png)
 
 ---
 
@@ -167,6 +202,12 @@ Wireframe thinking translated into structured responsive sections for desktop, t
 - body-parser
 - cors
 - dotenv
+
+### Salt & Smoke API endpoints implemented
+- `POST /api/reservations`, `GET /api/reservations`, `GET /api/reservations/:id`
+- `POST /api/newsletter/signup`, `GET /api/newsletter/signups`
+- `POST /api/menu`, `GET /api/menu`, `GET /api/menu/:id`, `PUT /api/menu/:id`, `DELETE /api/menu/:id`
+- `GET /api/health`
 
 ![Tech section visual](README-img/GitHub-clone.png)
 
@@ -258,11 +299,11 @@ CSS was validated with the W3C CSS Validator.
 
 ## Deployment
 
-Frontend is deployed via GitHub Pages:
+Salt & Smoke frontend is deployed via GitHub Pages:
 
 - https://hamid-aa80.github.io/Salt---Smoke/
 
-Project repository:
+Salt & Smoke project repository:
 
 - https://github.com/Hamid-aa80/Salt---Smoke
 
@@ -272,13 +313,12 @@ Project repository:
 
 ## Credits
 
-- Bootstrap
-- Font Awesome
-- Google Fonts
-- WOW.js
-- Express
-- SQLite
-- Playwright
+- Bootstrap (layout/components)
+- Font Awesome (iconography)
+- Google Fonts (Pacifico branding style)
+- WOW.js (scroll reveal animations)
+- Express + SQLite (API and persistence)
+- Playwright (automated end-to-end validation)
 
 ![Credits visual](README-img/About2-page.png)
 
@@ -286,7 +326,7 @@ Project repository:
 
 ## Content
 
-All textual content was written/adapted for the Salt & Smoke smokehouse concept to match brand tone and user goals.
+All copy is written/adapted specifically for Salt & Smoke (smokehouse positioning, menu presentation tone, booking-focused CTAs, and hospitality messaging).
 
 ![Content section image](README-img/About-desktop.png)
 
@@ -294,7 +334,7 @@ All textual content was written/adapted for the Salt & Smoke smokehouse concept 
 
 ## Media
 
-Images used in this project are stored in:
+Salt & Smoke media assets used in implementation and documentation are stored in:
 
 - `assets/img/`
 - `README-img/`
@@ -307,7 +347,7 @@ Media supports responsive presentation and documentation evidence.
 
 ## Code
 
-Primary project files:
+Primary Salt & Smoke implementation files:
 
 - `index.html`, `submit.html`
 - `style.css`
@@ -321,7 +361,8 @@ Primary project files:
 
 ## Disclaimer
 
-This project is created for educational and portfolio purposes. Brand, content, and imagery are used as part of a demonstration build and may require licensing/permission checks before commercial use.
+Salt & Smoke is a portfolio/educational project.  
+Brand copy, visuals, and implementation are for demonstration purposes; any commercial reuse should verify licensing/ownership for all content and media assets.
 
 ![Disclaimer visual](README-img/dark.png)
 
