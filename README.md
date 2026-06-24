@@ -1,7 +1,5 @@
 # 🍖 Salt & Smoke
 
-![Responsive Design](https://img.shields.io/badge/Responsive-💻%20%7C%20📱%20%7C%20⌨️-brightgreen)
-
 **💻 Laptop • 📱 Tablet • ⌨️ Mobile Phone**
 
 > A premium restaurant website for an upscale smokehouse dining concept in Watford, combining elegant design with a fully-functional backend API.
