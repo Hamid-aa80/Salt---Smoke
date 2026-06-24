@@ -378,6 +378,24 @@ small,
 
 }
 
+.footer-spotlight {
+    border: 1px solid rgba(254, 161, 22, 0.35);
+    background: linear-gradient(135deg, rgba(254, 161, 22, 0.16), rgba(15, 23, 40, 0.85));
+    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2);
+}
+
+.footer-trust-item {
+    padding: 0.65rem 0.8rem;
+    border-radius: 0.5rem;
+    background: rgba(241, 248, 255, 0.08);
+    color: var(--light);
+    font-size: 0.92rem;
+}
+
+.footer-trust-item i {
+    color: var(--primary);
+}
+
 .footer .btn.btn-link {
     display: block;
     margin-bottom: 5px;
