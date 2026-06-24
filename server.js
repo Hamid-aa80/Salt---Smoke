@@ -358,6 +358,10 @@ app.delete('/api/menu/:id', (req, res) => {
   );
 });
 
+app.get('/api/docs', (req, res) => {
+  res.sendFile(path.join(__dirname, 'API-DOCUMENTATION.md'));
+});
+
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'API is running' });
