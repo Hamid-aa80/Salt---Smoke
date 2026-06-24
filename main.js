@@ -84,6 +84,29 @@ document.addEventListener("DOMContentLoaded", () => {
     sectionTargets.forEach(({ target }) => observer.observe(target));
   }
 
+  const menuSection = document.getElementById("menu");
+  if (menuSection) {
+    const menuTitle = menuSection.querySelector("h1");
+    const menuItems = Array.from(
+      menuSection.querySelectorAll("#tab-1 h5.d-flex.justify-content-between span:first-child")
+    );
+    const menuPrices = Array.from(
+      menuSection.querySelectorAll("#tab-1 h5.d-flex.justify-content-between span.text-primary")
+    );
+
+    if (menuTitle && menuItems.length && menuItems.length === menuPrices.length) {
+      const daySeed = Math.floor(Date.now() / 86400000);
+      const dailyIndex = daySeed % menuItems.length;
+      const dailyDish = menuItems[dailyIndex].textContent.trim();
+      const dailyPrice = menuPrices[dailyIndex].textContent.trim();
+
+      const spotlight = document.createElement("p");
+      spotlight.className = "text-center text-white mt-3 mb-4";
+      spotlight.innerHTML = `Chef's pick today: <strong>${dailyDish}</strong> <span class="text-primary">${dailyPrice}</span>`;
+      menuTitle.insertAdjacentElement("afterend", spotlight);
+    }
+  }
+
   const reservationSection = document.getElementById("reservation");
   const reservationForm = reservationSection
     ? reservationSection.querySelector("form")
@@ -142,6 +165,29 @@ document.addEventListener("DOMContentLoaded", () => {
     field.addEventListener("change", saveDraft);
   });
 
+  const bookingButtonRow = bookingLink ? bookingLink.closest(".col-12") : null;
+  const reservationSummary = document.createElement("p");
+  reservationSummary.className = "text-white-50 small mt-3 mb-0";
+  if (bookingButtonRow) {
+    bookingButtonRow.appendChild(reservationSummary);
+  }
+
+  const updateReservationSummary = () => {
+    if (!bookingButtonRow) return;
+    const name = nameInput ? nameInput.value.trim() : "";
+    const date = dateInput ? dateInput.value : "";
+    const people = peopleSelect ? peopleSelect.value : "";
+
+    const details = [];
+    if (name) details.push(name);
+    if (people) details.push(`${people} guest${people === "1" ? "" : "s"}`);
+    if (date) details.push(new Date(date).toLocaleDateString("en-GB"));
+
+    reservationSummary.textContent = details.length
+      ? `Reservation preview: ${details.join(" • ")}`
+      : "Fill in your details to preview your reservation.";
+  };
+
   const validateReservationForm = () => {
     if (!nameInput || !emailInput || !dateInput || !bookingLink) return false;
 
@@ -192,6 +238,11 @@ document.addEventListener("DOMContentLoaded", () => {
       window.location.href = bookingLink.getAttribute("href");
     });
   }
+
+  updateReservationSummary();
+  [nameInput, dateInput, peopleSelect].forEach(field => {
+    if (!field) return;
+    field.addEventListener("input", updateReservationSummary);
+    field.addEventListener("change", updateReservationSummary);
+  });
 });
-
-
