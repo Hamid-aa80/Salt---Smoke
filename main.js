@@ -23,6 +23,34 @@ document.addEventListener("DOMContentLoaded", () => {
     collapse?.hide();
   };
 
+  const showAlertMessage = (element, variant, message) => {
+    if (!element) return;
+
+    element.classList.remove("d-none", "alert-success", "alert-danger", "alert-warning", "alert-info");
+    element.classList.add("alert", `alert-${variant}`);
+    element.textContent = message;
+  };
+
+  const hideAlertMessage = element => {
+    if (!element) return;
+
+    element.classList.add("d-none");
+    element.textContent = "";
+  };
+
+  const reservationSuccessKey = "salt-smoke-reservation-confirmation";
+  const readReservationConfirmation = () => {
+    const storedConfirmation = sessionStorage.getItem(reservationSuccessKey);
+    if (!storedConfirmation) return null;
+
+    try {
+      return JSON.parse(storedConfirmation);
+    } catch (error) {
+      sessionStorage.removeItem(reservationSuccessKey);
+      return null;
+    }
+  };
+
   const createBackToTopButton = () => {
     const button = document.createElement("button");
     button.type = "button";
@@ -205,33 +233,31 @@ document.addEventListener("DOMContentLoaded", () => {
     const newsletterButton = newsletterSection
       ? newsletterSection.querySelector('button[type="button"]')
       : null;
-
     if (newsletterInput && newsletterButton) {
       const newsletterStorageKey = "salt-smoke-newsletter-email";
       const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const newsletterFeedback = document.getElementById("newsletterFeedback");
       const existingNewsletterEmail = localStorage.getItem(newsletterStorageKey);
       if (existingNewsletterEmail) {
         newsletterInput.value = existingNewsletterEmail;
       }
-
-      const feedback = document.createElement("p");
-      feedback.className = "small mt-2 mb-0";
-      newsletterButton.insertAdjacentElement("afterend", feedback);
 
       const subscribe = () => {
         const email = newsletterInput.value.trim();
         if (!emailPattern.test(email)) {
           newsletterInput.setCustomValidity("Please enter a valid email to subscribe.");
           newsletterInput.reportValidity();
-          feedback.className = "small text-warning mt-2 mb-0";
-          feedback.textContent = "Please provide a valid email address.";
+          showAlertMessage(newsletterFeedback, "danger", "Please enter a valid email address to subscribe.");
           return;
         }
 
         newsletterInput.setCustomValidity("");
         localStorage.setItem(newsletterStorageKey, email);
-        feedback.className = "small text-success mt-2 mb-0";
-        feedback.textContent = "Thanks for subscribing. We'll keep you updated.";
+        showAlertMessage(
+          newsletterFeedback,
+          "success",
+          `Thanks for subscribing, ${email}. We'll keep you updated.`
+        );
       };
 
       newsletterButton.addEventListener("click", subscribe);
@@ -243,11 +269,34 @@ document.addEventListener("DOMContentLoaded", () => {
       });
       newsletterInput.addEventListener("input", () => {
         newsletterInput.setCustomValidity("");
+        hideAlertMessage(newsletterFeedback);
       });
     }
   }
 
   const reservationSection = document.getElementById("reservation");
+  const reservationConfirmation = document.getElementById("reservationConfirmation");
+  if (reservationConfirmation) {
+    const details = readReservationConfirmation();
+    const confirmationMessage = details
+      ? (() => {
+          sessionStorage.removeItem(reservationSuccessKey);
+          const summaryParts = [];
+
+          if (details.name) summaryParts.push(details.name);
+          if (details.date) summaryParts.push(new Date(details.date).toLocaleDateString("en-GB"));
+          if (details.guests) {
+            summaryParts.push(`${details.guests} guest${details.guests === "1" ? "" : "s"}`);
+          }
+
+          return summaryParts.length
+            ? `Your reservation request for ${summaryParts.join(" • ")} has been received. We'll be in touch shortly to confirm the details.`
+            : "Your reservation request has been received. We'll be in touch shortly to confirm the details.";
+        })()
+      : "Your reservation request has been received. We'll be in touch shortly to confirm the details.";
+
+    reservationConfirmation.textContent = confirmationMessage;
+  }
   const reservationForm = reservationSection
     ? reservationSection.querySelector("form")
     : null;
@@ -260,6 +309,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const peopleSelect = reservationForm.querySelector("#select1");
   const messageInput = reservationForm.querySelector("#message");
   const submitButton = reservationForm.querySelector('button[type="submit"], input[type="submit"]');
+  const reservationFeedback = document.getElementById("reservationFeedback");
 
   reservationForm.noValidate = true;
 
@@ -361,6 +411,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!isValidName(name)) {
       nameInput.setCustomValidity("Please enter a valid full name.");
       nameInput.reportValidity();
+      showAlertMessage(reservationFeedback, "danger", "Please enter a valid full name.");
       nameInput.focus();
       return false;
     }
@@ -369,6 +420,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!isValidEmail(email)) {
       emailInput.setCustomValidity("Please enter a valid email address.");
       emailInput.reportValidity();
+      showAlertMessage(reservationFeedback, "danger", "Please enter a valid email address.");
       emailInput.focus();
       return false;
     }
@@ -377,6 +429,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!date) {
       dateInput.setCustomValidity("Please choose a reservation date.");
       dateInput.reportValidity();
+      showAlertMessage(reservationFeedback, "danger", "Please choose a reservation date.");
       dateInput.focus();
       return false;
     }
@@ -384,6 +437,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!isValidDate(date)) {
       dateInput.setCustomValidity("Reservation date cannot be in the past.");
       dateInput.reportValidity();
+      showAlertMessage(reservationFeedback, "danger", "Reservation date cannot be in the past.");
       dateInput.focus();
       return false;
     }
@@ -392,6 +446,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!isValidGuestNumber(guests)) {
       peopleSelect.setCustomValidity("Please select the number of guests.");
       peopleSelect.reportValidity();
+      showAlertMessage(reservationFeedback, "danger", "Please select the number of guests.");
       peopleSelect.focus();
       return false;
     }
@@ -400,6 +455,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!isValidRequest(request)) {
       messageInput.setCustomValidity("Please enter at least 5 characters for your request.");
       messageInput.reportValidity();
+      showAlertMessage(
+        reservationFeedback,
+        "danger",
+        "Please enter at least 5 characters for your special request."
+      );
       messageInput.focus();
       return false;
     }
@@ -449,8 +509,16 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    sessionStorage.setItem(
+      reservationSuccessKey,
+      JSON.stringify({
+        name: nameInput.value.trim(),
+        date: dateInput.value,
+        guests: peopleSelect.value
+      })
+    );
     [nameInput, emailInput, dateInput, peopleSelect, messageInput].forEach(clearFieldValidity);
-    saveDraft();
+    localStorage.removeItem(storageKey);
   });
 
   updateReservationSummary();
@@ -464,6 +532,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!field) return;
     field.addEventListener("input", () => clearFieldValidity(field));
     field.addEventListener("change", () => clearFieldValidity(field));
+    field.addEventListener("input", () => hideAlertMessage(reservationFeedback));
+    field.addEventListener("change", () => hideAlertMessage(reservationFeedback));
     field.addEventListener("input", updateSubmitButtonState);
     field.addEventListener("change", updateSubmitButtonState);
   });
