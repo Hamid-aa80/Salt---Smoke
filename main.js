@@ -261,6 +261,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const messageInput = reservationForm.querySelector("#message");
   const submitButton = reservationForm.querySelector('button[type="submit"], input[type="submit"]');
 
+  reservationForm.noValidate = true;
+
+  [nameInput, emailInput, dateInput, peopleSelect, messageInput].forEach(field => {
+    if (!field) return;
+    field.required = true;
+  });
+  if (nameInput) nameInput.minLength = 2;
+  if (messageInput) messageInput.minLength = 5;
+
   const storageKey = "salt-smoke-reservation-draft";
   const today = new Date().toISOString().split("T")[0];
   if (dateInput) {
