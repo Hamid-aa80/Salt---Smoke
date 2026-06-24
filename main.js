@@ -13,6 +13,45 @@ document.addEventListener("DOMContentLoaded", () => {
     prefersReducedMotion.addListener(applyReducedMotionClass);
   }
 
+  const navbarCollapse = document.getElementById("navbarCollapse");
+  const hideNavbarCollapse = () => {
+    if (!navbarCollapse || !navbarCollapse.classList.contains("show")) return;
+
+    const collapse = window.bootstrap?.Collapse?.getOrCreateInstance(navbarCollapse, {
+      toggle: false
+    });
+    collapse?.hide();
+  };
+
+  const createBackToTopButton = () => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "back-to-top btn btn-primary btn-lg-square rounded-circle shadow";
+    button.setAttribute("aria-label", "Back to top");
+    button.title = "Back to top";
+    button.innerHTML = '<i class="fa-solid fa-arrow-up"></i>';
+    button.style.display = "none";
+    button.style.alignItems = "center";
+    button.style.justifyContent = "center";
+
+    const updateVisibility = () => {
+      button.style.display = window.scrollY > 500 ? "inline-flex" : "none";
+    };
+
+    button.addEventListener("click", () => {
+      window.scrollTo({
+        top: 0,
+        behavior: prefersReducedMotion.matches ? "auto" : "smooth"
+      });
+    });
+
+    document.body.appendChild(button);
+    updateVisibility();
+    window.addEventListener("scroll", updateVisibility, { passive: true });
+  };
+
+  createBackToTopButton();
+
   const navLinks = document.querySelectorAll('a[href^="#"]');
   navLinks.forEach(link => {
     link.addEventListener("click", event => {
@@ -24,6 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       event.preventDefault();
       target.scrollIntoView({ behavior: "smooth", block: "start" });
+      hideNavbarCollapse();
     });
   });
 
