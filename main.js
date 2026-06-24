@@ -394,6 +394,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const newsletterFeedback = document.getElementById("newsletterFeedback");
       newsletterForm.noValidate = true;
       newsletterInput.required = true;
+      newsletterInput.maxLength = 254;
 
       const existingNewsletterEmail = localStorage.getItem(newsletterStorageKey);
       if (existingNewsletterEmail) {
@@ -402,10 +403,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const normalizeNewsletterEmail = email => email.trim().toLowerCase();
       const isValidNewsletterEmail = email => emailPattern.test(email);
+      const isTooLongNewsletterEmail = email => email.length > 254;
+      const hasValidLocalPartLength = email => {
+        const localPart = email.split("@")[0] || "";
+        return localPart.length <= 64;
+      };
 
       const updateNewsletterButtonState = () => {
         const email = normalizeNewsletterEmail(newsletterInput.value);
-        newsletterButton.disabled = !isValidNewsletterEmail(email);
+        newsletterButton.disabled =
+          !email ||
+          !isValidNewsletterEmail(email) ||
+          isTooLongNewsletterEmail(email) ||
+          !hasValidLocalPartLength(email);
       };
 
       const clearNewsletterValidity = () => {
@@ -441,6 +451,32 @@ document.addEventListener("DOMContentLoaded", () => {
           return false;
         }
 
+        if (isTooLongNewsletterEmail(email)) {
+          newsletterInput.setAttribute("aria-invalid", "true");
+          newsletterInput.setCustomValidity("Email addresses must be 254 characters or fewer.");
+          newsletterInput.reportValidity();
+          showAlertMessage(
+            newsletterFeedback,
+            "danger",
+            "That email address is too long. Please keep it under 255 characters."
+          );
+          newsletterInput.focus();
+          return false;
+        }
+
+        if (!hasValidLocalPartLength(email)) {
+          newsletterInput.setAttribute("aria-invalid", "true");
+          newsletterInput.setCustomValidity("The part before @ must be 64 characters or fewer.");
+          newsletterInput.reportValidity();
+          showAlertMessage(
+            newsletterFeedback,
+            "danger",
+            "The text before @ is too long. Please use 64 characters or fewer."
+          );
+          newsletterInput.focus();
+          return false;
+        }
+
         clearNewsletterValidity();
         return true;
       };
@@ -464,7 +500,16 @@ document.addEventListener("DOMContentLoaded", () => {
           return;
         }
 
-        localStorage.setItem(newsletterStorageKey, email);
+        try {
+          localStorage.setItem(newsletterStorageKey, email);
+        } catch (error) {
+          showAlertMessage(
+            newsletterFeedback,
+            "danger",
+            "We couldn't save your newsletter preference in this browser. Please try again."
+          );
+          return;
+        }
         showAlertMessage(
           newsletterFeedback,
           "success",
@@ -483,6 +528,7 @@ document.addEventListener("DOMContentLoaded", () => {
         hideAlertMessage(newsletterFeedback);
         updateNewsletterButtonState();
       });
+      newsletterInput.addEventListener("blur", validateNewsletterEmail);
       newsletterInput.addEventListener("change", updateNewsletterButtonState);
       updateNewsletterButtonState();
     }
