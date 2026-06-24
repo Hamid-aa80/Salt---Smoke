@@ -1,0 +1,194 @@
+📁 Salt & Smoke Repository Structure
+====================================
+
+salt-smoke/
+│
+├── 🖥️  BACKEND API FILES
+│   ├── server.js                      ⭐ Main Express API server
+│   ├── api-client.js                  🔗 Frontend JavaScript library
+│   ├── api-integration-examples.js    💡 Integration code examples
+│   ├── test-api.sh                    🧪 Test script for all endpoints
+│   ├── database.db                    💾 SQLite database (auto-created)
+│   ├── .env                           ⚙️  Environment variables
+│   │
+│   └── 📚 API DOCUMENTATION
+│       ├── API-SETUP-COMPLETE.md      ✅ Setup summary (this document)
+│       ├── API-QUICKSTART.md          🚀 Quick start guide
+│       ├── API-DOCUMENTATION.md       📖 Complete API reference
+│       └── API-FILES-STRUCTURE.txt    📋 This file
+│
+├── 🎨 FRONTEND FILES (existing)
+│   ├── index.html                     Home page
+│   ├── submit.html                    Confirmation page
+│   ├── main.js                        Frontend JavaScript
+│   ├── style.css                      Styling
+│   └── assets/img/                    Images
+│
+├── 🧪 TESTING
+│   ├── playwright.config.ts           Test configuration
+│   └── tests/                         Test files
+│
+├── 📦 PROJECT FILES
+│   ├── package.json                   npm dependencies & scripts
+│   ├── package-lock.json              Dependency lock file
+│   ├── .gitignore                     Git ignore rules
+│   └── README.md                      Main documentation
+│
+└── .git/                              Git repository
+
+
+⚙️  NPM SCRIPTS AVAILABLE
+==========================
+
+npm start        Start the API server
+npm run dev      Start server (development mode)
+npm test         Run frontend tests (Playwright)
+
+
+📊 DATABASE SCHEMA
+==================
+
+RESERVATIONS table
+├── id              INTEGER PRIMARY KEY
+├── name            TEXT (required, 2+ chars)
+├── email           TEXT (required, valid format)
+├── date            TEXT (required, YYYY-MM-DD)
+├── time            TEXT (required, HH:MM)
+├── guests          INTEGER (required, 1-20)
+├── requests        TEXT (optional)
+├── created_at      DATETIME (auto)
+└── status          TEXT (confirmed)
+
+NEWSLETTER_SIGNUPS table
+├── id              INTEGER PRIMARY KEY
+├── email           TEXT (unique, required)
+├── created_at      DATETIME (auto)
+└── status          TEXT (subscribed)
+
+MENU_ITEMS table
+├── id              INTEGER PRIMARY KEY
+├── name            TEXT (required)
+├── category        TEXT (required)
+├── description     TEXT (optional)
+├── price           REAL (optional)
+├── image           TEXT (optional)
+├── is_chefs_pick   INTEGER (0/1)
+└── created_at      DATETIME (auto)
+
+
+🔌 API ENDPOINTS SUMMARY
+========================
+
+HEALTH CHECK
+  GET /api/health
+  → {"status": "API is running"}
+
+RESERVATIONS
+  POST   /api/reservations             Create reservation
+  GET    /api/reservations             List all
+  GET    /api/reservations/:id         Get one
+
+NEWSLETTER
+  POST   /api/newsletter/signup        Subscribe
+  GET    /api/newsletter/signups       Get all
+
+MENU
+  GET    /api/menu                     Get all items
+  GET    /api/menu?category=lunch      Filter by category
+  GET    /api/menu/:id                 Get one item
+  POST   /api/menu                     Create item
+  PUT    /api/menu/:id                 Update item
+  DELETE /api/menu/:id                 Delete item
+
+
+📝 QUICK REFERENCE
+===================
+
+Start server:
+  npm start
+
+Run tests:
+  bash test-api.sh
+
+Test specific endpoint:
+  curl http://localhost:5000/api/health
+
+Test reservation creation:
+  curl -X POST http://localhost:5000/api/reservations \
+    -H "Content-Type: application/json" \
+    -d '{
+      "name":"John Doe",
+      "email":"john@example.com",
+      "date":"2024-12-25",
+      "time":"19:30",
+      "guests":4
+    }'
+
+Get menu items:
+  curl http://localhost:5000/api/menu
+
+Filter menu by category:
+  curl http://localhost:5000/api/menu?category=lunch
+
+
+🔑 KEY FILES FOR EACH TASK
+===========================
+
+Task: "How do I start the API?"
+→ Read: API-QUICKSTART.md
+
+Task: "What API endpoints are available?"
+→ Read: API-DOCUMENTATION.md
+
+Task: "How do I integrate with my frontend?"
+→ Read: api-integration-examples.js
+
+Task: "How do I test the API?"
+→ Run: bash test-api.sh
+
+Task: "What's the database structure?"
+→ Read: API-FILES-STRUCTURE.txt (this file)
+
+Task: "How do I add/update menu items?"
+→ Check: API-DOCUMENTATION.md (Menu section)
+
+
+✨ FEATURES IMPLEMENTED
+=======================
+
+✅ RESTful API with Express.js
+✅ SQLite Database with auto-initialization
+✅ Input validation (email, guest count, etc.)
+✅ CORS enabled for frontend
+✅ Error handling with helpful messages
+✅ Frontend JavaScript client library
+✅ Comprehensive documentation
+✅ Test script for all endpoints
+✅ Integration code examples
+✅ .gitignore configured
+✅ Environment variables setup
+
+
+🎯 NEXT STEPS
+==============
+
+1. Start the server:
+   npm start
+
+2. Test the API:
+   bash test-api.sh
+
+3. Integrate frontend:
+   - Import api-client.js
+   - Use examples in api-integration-examples.js
+   - Update form handlers
+
+4. Add menu data:
+   - Use POST /api/menu endpoint
+   - Add categories and items
+
+5. Enhance further:
+   - Add authentication
+   - Add email notifications
+   - Add payment processing
+   - Create admin dashboard
