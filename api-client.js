@@ -3,7 +3,30 @@
  * Helper functions for frontend to communicate with the API
  */
 
-const API_URL = process.env.API_URL || 'http://localhost:5000/api';
+const API_URL = process.env.API_URL || "http://localhost:5000/api";
+
+const extractResponseMessage = payload => {
+  if (!payload) return null;
+  if (Array.isArray(payload.errors) && payload.errors.length) {
+    return payload.errors.join(", ");
+  }
+  if (typeof payload.message === "string" && payload.message.trim()) {
+    return payload.message;
+  }
+  return null;
+};
+
+const requestJson = async (url, options = {}, fallbackErrorMessage = "Request failed.") => {
+  const response = await fetch(url, options);
+  const payload = await response.json();
+
+  if (!response.ok) {
+    const apiMessage = extractResponseMessage(payload);
+    throw new Error(apiMessage || fallbackErrorMessage);
+  }
+
+  return payload;
+};
 
 /**
  * Reservations API
@@ -15,12 +38,15 @@ export const reservationsAPI = {
    * @returns {Promise<Object>}
    */
   create: async (data) => {
-    const response = await fetch(`${API_URL}/reservations`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
-    return response.json();
+    return requestJson(
+      `${API_URL}/reservations`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      },
+      "Failed to create reservation."
+    );
   },
 
   /**
@@ -28,8 +54,7 @@ export const reservationsAPI = {
    * @returns {Promise<Object>}
    */
   getAll: async () => {
-    const response = await fetch(`${API_URL}/reservations`);
-    return response.json();
+    return requestJson(`${API_URL}/reservations`, {}, "Failed to load reservations.");
   },
 
   /**
@@ -38,9 +63,8 @@ export const reservationsAPI = {
    * @returns {Promise<Object>}
    */
   getById: async (id) => {
-    const response = await fetch(`${API_URL}/reservations/${id}`);
-    return response.json();
-  },
+    return requestJson(`${API_URL}/reservations/${id}`, {}, "Failed to load reservation.");
+  }
 };
 
 /**
@@ -53,12 +77,15 @@ export const newsletterAPI = {
    * @returns {Promise<Object>}
    */
   signup: async (email) => {
-    const response = await fetch(`${API_URL}/newsletter/signup`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email }),
-    });
-    return response.json();
+    return requestJson(
+      `${API_URL}/newsletter/signup`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email })
+      },
+      "Failed to subscribe to newsletter."
+    );
   },
 
   /**
@@ -66,9 +93,8 @@ export const newsletterAPI = {
    * @returns {Promise<Object>}
    */
   getSignups: async () => {
-    const response = await fetch(`${API_URL}/newsletter/signups`);
-    return response.json();
-  },
+    return requestJson(`${API_URL}/newsletter/signups`, {}, "Failed to load newsletter signups.");
+  }
 };
 
 /**
@@ -81,11 +107,10 @@ export const menuAPI = {
    * @returns {Promise<Object>}
    */
   getAll: async (category = null) => {
-    const url = category 
+    const url = category
       ? `${API_URL}/menu?category=${encodeURIComponent(category)}`
       : `${API_URL}/menu`;
-    const response = await fetch(url);
-    return response.json();
+    return requestJson(url, {}, "Failed to load menu items.");
   },
 
   /**
@@ -94,8 +119,7 @@ export const menuAPI = {
    * @returns {Promise<Object>}
    */
   getById: async (id) => {
-    const response = await fetch(`${API_URL}/menu/${id}`);
-    return response.json();
+    return requestJson(`${API_URL}/menu/${id}`, {}, "Failed to load menu item.");
   },
 
   /**
@@ -104,12 +128,15 @@ export const menuAPI = {
    * @returns {Promise<Object>}
    */
   create: async (data) => {
-    const response = await fetch(`${API_URL}/menu`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
-    return response.json();
+    return requestJson(
+      `${API_URL}/menu`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      },
+      "Failed to create menu item."
+    );
   },
 
   /**
@@ -119,12 +146,15 @@ export const menuAPI = {
    * @returns {Promise<Object>}
    */
   update: async (id, data) => {
-    const response = await fetch(`${API_URL}/menu/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
-    return response.json();
+    return requestJson(
+      `${API_URL}/menu/${id}`,
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      },
+      "Failed to update menu item."
+    );
   },
 
   /**
@@ -133,17 +163,19 @@ export const menuAPI = {
    * @returns {Promise<Object>}
    */
   delete: async (id) => {
-    const response = await fetch(`${API_URL}/menu/${id}`, {
-      method: 'DELETE',
-    });
-    return response.json();
-  },
+    return requestJson(
+      `${API_URL}/menu/${id}`,
+      {
+        method: "DELETE"
+      },
+      "Failed to delete menu item."
+    );
+  }
 };
 
 /**
  * Health check
  */
 export const health = async () => {
-  const response = await fetch(`${API_URL}/health`);
-  return response.json();
+  return requestJson(`${API_URL}/health`, {}, "Failed to check API health.");
 };

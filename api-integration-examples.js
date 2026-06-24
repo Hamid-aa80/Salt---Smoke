@@ -5,9 +5,51 @@
  * These are example functions you can adapt into your main.js
  */
 
-import { reservationsAPI, menuAPI, newsletterAPI } from './api-client.js';
+import { reservationsAPI, menuAPI, newsletterAPI } from "./api-client.js";
 
-const API_URL = 'http://localhost:5000/api';
+const API_URL = "http://localhost:5000/api";
+
+const renderFeedbackMessage = (container, variant, message) => {
+  if (!container) return;
+
+  container.className = `alert alert-${variant}`;
+  container.setAttribute("role", "alert");
+  container.setAttribute("aria-live", variant === "danger" ? "assertive" : "polite");
+  container.setAttribute("aria-atomic", "true");
+
+  const titleByVariant = {
+    success: "Success",
+    danger: "Error",
+    info: "Info"
+  };
+  container.innerHTML = `<strong>${titleByVariant[variant] || "Notice"}:</strong> ${message}`;
+};
+
+const getOrCreateFeedbackContainer = target => {
+  if (!target) return null;
+
+  const existingContainer = target.querySelector("[data-api-feedback]");
+  if (existingContainer) return existingContainer;
+
+  const container = document.createElement("div");
+  container.dataset.apiFeedback = "true";
+  container.className = "alert d-none mt-3";
+  target.prepend(container);
+  return container;
+};
+
+const showMessageForForm = (form, variant, message) => {
+  const feedbackContainer = getOrCreateFeedbackContainer(form);
+  if (!feedbackContainer) return;
+  renderFeedbackMessage(feedbackContainer, variant, message);
+};
+
+const showMenuMessage = (variant, message) => {
+  const menuContainer = document.getElementById("menu-container");
+  const feedbackContainer = getOrCreateFeedbackContainer(menuContainer?.parentElement || menuContainer);
+  if (!feedbackContainer) return;
+  renderFeedbackMessage(feedbackContainer, variant, message);
+};
 
 /**
  * Example: Handle Reservation Form Submission
@@ -20,12 +62,12 @@ export async function handleReservationSubmit(event) {
   // Get form data
   const formData = new FormData(event.target);
   const data = {
-    name: formData.get('name'),
-    email: formData.get('email'),
-    date: formData.get('date'),
-    time: formData.get('time'),
-    guests: parseInt(formData.get('guests')),
-    requests: formData.get('requests') || ''
+    name: formData.get("name"),
+    email: formData.get("email"),
+    date: formData.get("date"),
+    time: formData.get("time"),
+    guests: parseInt(formData.get("guests"), 10),
+    requests: formData.get("requests") || ""
   };
 
   try {
@@ -33,25 +75,24 @@ export async function handleReservationSubmit(event) {
     const result = await reservationsAPI.create(data);
 
     if (result.success) {
-      // Show success message
-      console.log('Reservation created:', result);
-      
+      showMessageForForm(
+        event.target,
+        "success",
+        "Your reservation request was sent successfully. Redirecting to your confirmation page."
+      );
+
       // Show confirmation page
-      window.location.href = 'submit.html';
-      
-      // Or show success toast/modal
-      // showSuccessMessage('Your reservation has been confirmed!');
-      
+      window.location.href = "submit.html";
+
       // Clear form
       event.target.reset();
-    } else {
-      // Show validation errors
-      console.error('Validation errors:', result.errors);
-      showErrorMessage(result.errors.join(', '));
     }
   } catch (error) {
-    console.error('API Error:', error);
-    showErrorMessage('Failed to create reservation. Please try again.');
+    showMessageForForm(
+      event.target,
+      "danger",
+      error?.message || "Unable to create your reservation right now. Please try again."
+    );
   }
 }
 
@@ -63,28 +104,31 @@ export async function handleReservationSubmit(event) {
 export async function handleNewsletterSignup(event) {
   event.preventDefault();
 
-  const email = document.getElementById('newsletter-email').value;
+  const email = document.getElementById("newsletter-email").value;
 
   try {
     const result = await newsletterAPI.signup(email);
 
     if (result.success) {
-      console.log('Newsletter signup successful:', result);
-      showSuccessMessage('Successfully subscribed to our newsletter!');
+      showMessageForForm(
+        event.target,
+        "success",
+        "You're subscribed successfully. We'll send updates to your inbox."
+      );
       event.target.reset();
-      
+
       // Save to sessionStorage (as in original code)
-      sessionStorage.setItem('newsletterEmail', email);
-    } else {
-      if (result.message.includes('already subscribed')) {
-        showInfoMessage('You are already subscribed to our newsletter.');
-      } else {
-        showErrorMessage(result.message);
-      }
+      sessionStorage.setItem("newsletterEmail", email);
     }
   } catch (error) {
-    console.error('API Error:', error);
-    showErrorMessage('Failed to subscribe. Please try again.');
+    const message = error?.message || "Unable to subscribe right now. Please try again.";
+    showMessageForForm(
+      event.target,
+      message.includes("already subscribed") ? "info" : "danger",
+      message.includes("already subscribed")
+        ? "This email is already subscribed to the newsletter."
+        : message
+    );
   }
 }
 
@@ -111,9 +155,10 @@ export async function loadMenuItems() {
 
       // Display menu items
       displayMenuItems(byCategory);
+      showMenuMessage("success", "Menu loaded successfully.");
     }
   } catch (error) {
-    console.error('Failed to load menu:', error);
+    showMenuMessage("danger", error?.message || "Unable to load menu items right now.");
   }
 }
 
@@ -121,25 +166,25 @@ export async function loadMenuItems() {
  * Example: Display Menu Items
  */
 function displayMenuItems(menuByCategory) {
-  const menuContainer = document.getElementById('menu-container');
+  const menuContainer = document.getElementById("menu-container");
   
   Object.entries(menuByCategory).forEach(([category, items]) => {
     const categoryEl = document.createElement('div');
-    categoryEl.className = 'menu-category';
+    categoryEl.className = "menu-category";
     categoryEl.innerHTML = `<h3>${category}</h3>`;
 
     items.forEach(item => {
       const itemEl = document.createElement('div');
-      itemEl.className = 'menu-item';
+      itemEl.className = "menu-item";
       if (item.is_chefs_pick) {
-        itemEl.classList.add('chefs-pick');
+        itemEl.classList.add("chefs-pick");
       }
 
       itemEl.innerHTML = `
         <h4>${item.name}</h4>
         <p>${item.description}</p>
         <p class="price">$${item.price.toFixed(2)}</p>
-        ${item.is_chefs_pick ? '<span class="badge">Chef\'s Pick</span>' : ''}
+        ${item.is_chefs_pick ? "<span class=\"badge\">Chef's Pick</span>" : ""}
       `;
 
       categoryEl.appendChild(itemEl);
@@ -157,28 +202,25 @@ export async function handleAddMenuItem(event) {
 
   const formData = new FormData(event.target);
   const data = {
-    name: formData.get('name'),
-    category: formData.get('category'),
-    description: formData.get('description'),
-    price: parseFloat(formData.get('price')),
-    image: formData.get('image'),
-    is_chefs_pick: formData.get('is_chefs_pick') === 'on'
+    name: formData.get("name"),
+    category: formData.get("category"),
+    description: formData.get("description"),
+    price: parseFloat(formData.get("price")),
+    image: formData.get("image"),
+    is_chefs_pick: formData.get("is_chefs_pick") === "on"
   };
 
   try {
     const result = await menuAPI.create(data);
 
     if (result.success) {
-      showSuccessMessage('Menu item added successfully!');
+      showMessageForForm(event.target, "success", "Menu item added successfully.");
       event.target.reset();
       // Reload menu
       loadMenuItems();
-    } else {
-      showErrorMessage(result.message);
     }
   } catch (error) {
-    console.error('API Error:', error);
-    showErrorMessage('Failed to add menu item.');
+    showMessageForForm(event.target, "danger", error?.message || "Failed to add menu item.");
   }
 }
 
@@ -187,17 +229,21 @@ export async function handleAddMenuItem(event) {
  */
 export async function filterMenuByCategory(category) {
   try {
-    const result = category 
+    const result = category
       ? await menuAPI.getAll(category)
       : await menuAPI.getAll();
 
     if (result.success) {
-      const menuContainer = document.getElementById('menu-container');
-      menuContainer.innerHTML = '';
+      const menuContainer = document.getElementById("menu-container");
+      menuContainer.innerHTML = "";
       displayMenuItems(groupByCategory(result.data));
+      showMenuMessage(
+        "success",
+        category ? `Showing ${category} menu items.` : "Showing all menu items."
+      );
     }
   } catch (error) {
-    console.error('Filter error:', error);
+    showMenuMessage("danger", error?.message || "Unable to filter menu right now.");
   }
 }
 
@@ -216,38 +262,6 @@ function groupByCategory(items) {
 }
 
 /**
- * Helper: Show success message (toast/modal)
- */
-function showSuccessMessage(message) {
-  // Option 1: Simple alert (replace with your toast/modal)
-  alert(message);
-  
-  // Option 2: Toast notification (example with bootstrap)
-  // const toast = document.createElement('div');
-  // toast.className = 'toast alert alert-success';
-  // toast.textContent = message;
-  // document.body.appendChild(toast);
-  // setTimeout(() => toast.remove(), 3000);
-}
-
-/**
- * Helper: Show error message
- */
-function showErrorMessage(message) {
-  alert('Error: ' + message);
-  
-  // Or use your existing error handling:
-  // console.error(message);
-}
-
-/**
- * Helper: Show info message
- */
-function showInfoMessage(message) {
-  alert(message);
-}
-
-/**
  * Initialize on Page Load
  * 
  * Add this to your page load handler:
@@ -256,18 +270,23 @@ export function initializeAPI() {
   // Check API health
   fetch(`${API_URL}/health`)
     .then(res => res.json())
-    .then(data => console.log('✅ API Status:', data.status))
-    .catch(err => console.warn('⚠️ API not available:', err));
+    .then(() => showMenuMessage("success", "Connected to API successfully."))
+    .catch(() =>
+      showMenuMessage(
+        "danger",
+        "API is currently unavailable. Please try again later or start the backend server."
+      )
+    );
 
   // Attach event listeners
-  const reservationForm = document.getElementById('reservation-form');
+  const reservationForm = document.getElementById("reservation-form");
   if (reservationForm) {
-    reservationForm.addEventListener('submit', handleReservationSubmit);
+    reservationForm.addEventListener("submit", handleReservationSubmit);
   }
 
-  const newsletterForm = document.getElementById('newsletter-form');
+  const newsletterForm = document.getElementById("newsletter-form");
   if (newsletterForm) {
-    newsletterForm.addEventListener('submit', handleNewsletterSignup);
+    newsletterForm.addEventListener("submit", handleNewsletterSignup);
   }
 
   // Load menu items
