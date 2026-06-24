@@ -66,6 +66,19 @@ test("rejects invalid reservation input with clear feedback", async ({ page }) =
   await expect(page.getByRole("alert")).toContainText("Please enter a valid email address");
 });
 
+test("rejects invalid newsletter input with clear feedback", async ({ page }) => {
+  await page.locator("#newsletterForm").scrollIntoViewIfNeeded();
+  const newsletterForm = page.locator("#newsletterForm");
+  const newsletterFeedback = page.locator("#newsletterFeedback");
+
+  await newsletterForm.dispatchEvent("submit", { bubbles: true, cancelable: true });
+  await expect(newsletterFeedback).toContainText("Please enter your email address to subscribe");
+
+  await page.locator("#newsletterEmail").fill("invalid-email");
+  await newsletterForm.dispatchEvent("submit", { bubbles: true, cancelable: true });
+  await expect(newsletterFeedback).toContainText("Please enter a valid email address");
+});
+
 test("stays responsive on mobile and keeps navigation usable", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await expect(page.locator(".navbar-toggler")).toBeVisible();

@@ -541,8 +541,12 @@ document.addEventListener("DOMContentLoaded", () => {
         newsletterInput.value = existingNewsletterEmail;
       }
 
+      const normalizeNewsletterEmail = email => email.trim().toLowerCase();
+      const isValidNewsletterEmail = email => emailPattern.test(email);
+
       const updateNewsletterButtonState = () => {
-        newsletterButton.disabled = newsletterInput.value.trim().length === 0;
+        const email = normalizeNewsletterEmail(newsletterInput.value);
+        newsletterButton.disabled = !isValidNewsletterEmail(email);
       };
 
       const clearNewsletterValidity = () => {
@@ -551,7 +555,7 @@ document.addEventListener("DOMContentLoaded", () => {
       };
 
       const validateNewsletterEmail = () => {
-        const email = newsletterInput.value.trim();
+        const email = normalizeNewsletterEmail(newsletterInput.value);
         if (!email) {
           newsletterInput.setAttribute("aria-invalid", "true");
           newsletterInput.setCustomValidity("Please enter your email address to subscribe.");
@@ -565,7 +569,7 @@ document.addEventListener("DOMContentLoaded", () => {
           return false;
         }
 
-        if (!emailPattern.test(email)) {
+        if (!isValidNewsletterEmail(email)) {
           newsletterInput.setAttribute("aria-invalid", "true");
           newsletterInput.setCustomValidity("Please enter a valid email to subscribe.");
           newsletterInput.reportValidity();
@@ -587,7 +591,20 @@ document.addEventListener("DOMContentLoaded", () => {
           return;
         }
 
-        const email = newsletterInput.value.trim();
+        const email = normalizeNewsletterEmail(newsletterInput.value);
+        const previousEmail = normalizeNewsletterEmail(localStorage.getItem(newsletterStorageKey) || "");
+        newsletterInput.value = email;
+
+        if (previousEmail && previousEmail === email) {
+          showAlertMessage(
+            newsletterFeedback,
+            "info",
+            `You're already subscribed with ${email}. We'll keep sending offers, news, and menu updates.`
+          );
+          updateNewsletterButtonState();
+          return;
+        }
+
         localStorage.setItem(newsletterStorageKey, email);
         showAlertMessage(
           newsletterFeedback,
