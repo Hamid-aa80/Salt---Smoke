@@ -51,6 +51,25 @@ The site includes:
 - `main.js` - interactive behaviour
 - `assets/img/` - imagery and icons
 
+## Testing
+
+The site was checked across the following areas:
+
+| Test area | What was checked | Result |
+| --- | --- | --- |
+| Valid input | Reservation form submission with valid name, email, date, guest count, and request text; newsletter signup with a valid email | Pass |
+| Invalid input | Empty reservation fields, invalid email formats, past dates, invalid guest counts, and short special requests | Pass |
+| Responsiveness | Layout and navigation on mobile, tablet, and desktop widths | Pass |
+| Console errors | Page load and interactions in the browser console while using navigation, filters, and forms | Pass |
+| Broken links | Internal anchor links, CTA buttons, home links, and footer/contact links | Pass |
+| Bugs and fixes | Validation feedback, draft saving/clearing, menu filtering/search behavior, and confirmation handling | Pass |
+
+### Notes
+
+- Successful reservation submissions show the confirmation page and clear the saved draft.
+- Invalid input keeps the user on the form and displays clear feedback instead of failing silently.
+- The site remains usable with reduced-motion preferences enabled.
+
 ## Local development
 
 1. Clone the repository:
