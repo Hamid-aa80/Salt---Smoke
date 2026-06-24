@@ -59,7 +59,7 @@ The website provides an exceptional user experience across all devices (mobile, 
 ### 🎨 Frontend Features
 - **Responsive Design** - Fully responsive across all device sizes
 - **Single-Page Application** - Smooth navigation with no page reloads
-- **Menu System** - Browse and filter dishes with advanced search functionality
+- **Menu System** - Browse dishes with search and daily chef highlights
 - **Chef's Pick** - Dynamic daily specials rotation
 - **Reservation Booking** - Complete reservation system with form validation
 - **Newsletter Signup** - Customer email subscription with validation
@@ -345,7 +345,7 @@ The Playwright test suite (`tests/site.spec.ts`) covers:
 ✅ **Happy Path Tests**
 - Reservation form submission and success flow
 - Newsletter signup and duplicate-subscription handling
-- Menu filtering and search functionality
+- Menu search experience and dish presentation
 
 ✅ **Validation Tests**
 - Invalid reservation input (name, email, date, and request length)
@@ -355,7 +355,7 @@ The Playwright test suite (`tests/site.spec.ts`) covers:
 ✅ **UI/UX Tests**
 - Mobile navigation behavior
 - Responsive rendering across mobile, tablet, and desktop breakpoints
-- Menu category filtering
+- Menu section rendering and visibility
 
 ✅ **Quality Assurance Tests**
 - No uncaught console/page errors during each test scenario

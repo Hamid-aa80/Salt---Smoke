@@ -60,6 +60,22 @@ test("handles valid reservation and newsletter input", async ({ page }) => {
   await page.locator("#newsletterEmail").fill("newsletter@example.com");
   await page.getByRole("button", { name: /sign up/i }).click();
   await expect(page.getByRole("alert")).toContainText("You're subscribed with newsletter@example.com");
+
+  await page.locator("#feedbackForm").scrollIntoViewIfNeeded();
+  const feedbackSubmit = page.locator("#feedbackSubmitButton");
+  await expect(feedbackSubmit).toBeDisabled();
+
+  await page.locator("#feedbackMessage").fill("Amazing food, service, and atmosphere.");
+  await page
+    .locator("#feedbackImage")
+    .setInputFiles("assets/img/hero.png");
+  await expect(page.locator("#feedbackPreview")).toBeVisible();
+  await expect(feedbackSubmit).toBeEnabled();
+
+  await feedbackSubmit.click();
+  await expect(page.locator("#feedbackFeedback")).toContainText(
+    "Thanks for your feedback. Your message and image were sent."
+  );
 });
 
 test("rejects invalid reservation input with clear feedback", async ({ page }) => {
@@ -102,6 +118,23 @@ test("rejects invalid newsletter input with clear feedback", async ({ page }) =>
   await expect(newsletterFeedback).toContainText("Please enter a valid email address");
 });
 
+test("rejects invalid feedback input with clear feedback", async ({ page }) => {
+  await page.locator("#feedbackForm").scrollIntoViewIfNeeded();
+  const feedbackForm = page.locator("#feedbackForm");
+  const feedbackAlert = page.locator("#feedbackFeedback");
+
+  await feedbackForm.dispatchEvent("submit", { bubbles: true, cancelable: true });
+  await expect(feedbackAlert).toContainText("Please enter your feedback before sending");
+
+  await page.locator("#feedbackMessage").fill("Too short");
+  await feedbackForm.dispatchEvent("submit", { bubbles: true, cancelable: true });
+  await expect(feedbackAlert).toContainText("at least 10 characters");
+
+  await page.locator("#feedbackMessage").fill("Great visit and excellent food quality.");
+  await feedbackForm.dispatchEvent("submit", { bubbles: true, cancelable: true });
+  await expect(feedbackAlert).toContainText("Please add an image to submit feedback.");
+});
+
 test("remains responsive across common breakpoints", async ({ page }) => {
   for (const viewport of [
     { width: 390, height: 844 },
@@ -131,11 +164,24 @@ test("stays responsive on mobile and keeps navigation usable", async ({ page }) 
   await expect(page.locator("#menu")).toBeInViewport();
 });
 
-test("filters menu items and keeps the page free of broken same-origin links", async ({ page }) => {
+test("searches menu items by name", async ({ page }) => {
   await page.locator("#menu").scrollIntoViewIfNeeded();
-  await page.locator('[data-menu-filter="breakfast"]').click();
-  await expect(page.locator('[data-menu-name="English Breakfast"]')).toBeVisible();
+  const menuSearch = page.locator("#menuSearch");
+
+  await menuSearch.fill("coffee");
+  await expect(page.locator('[data-menu-name="Coffee"]')).toBeVisible();
   await expect(page.locator('[data-menu-name="Juicy Burger"]')).toBeHidden();
+  await expect(page.locator("#menuVisibleCount")).toHaveText("1");
+
+  await menuSearch.fill("nonexistent dish");
+  await expect(page.locator("#menuEmptyState")).toBeVisible();
+  await expect(page.locator("#menuVisibleCount")).toHaveText("0");
+});
+
+test("keeps the page free of broken same-origin links", async ({ page }) => {
+  await page.locator("#menu").scrollIntoViewIfNeeded();
+  await expect(page.locator('[data-menu-name="English Breakfast"]')).toBeVisible();
+  await expect(page.locator('[data-menu-name="Juicy Burger"]')).toBeVisible();
 
   const links = await page.locator("a[href]").evaluateAll(elements =>
     elements

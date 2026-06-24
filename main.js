@@ -177,15 +177,10 @@ document.addEventListener("DOMContentLoaded", () => {
   if (menuSection) {
     const menuTitle = menuSection.querySelector("h1");
     const menuCards = Array.from(menuSection.querySelectorAll("[data-menu-item]"));
-    const filterButtons = Array.from(menuSection.querySelectorAll("[data-menu-filter]"));
     const menuSearch = menuSection.querySelector("#menuSearch");
     const menuVisibleCount = menuSection.querySelector("#menuVisibleCount");
     const menuTotalCount = menuSection.querySelector("#menuTotalCount");
     const menuEmptyState = menuSection.querySelector("#menuEmptyState");
-    const menuFilterSummary = menuSection.querySelector("#menuFilterSummary");
-    const menuSort = menuSection.querySelector("#menuSort");
-    const menuResetFilters = menuSection.querySelector("#menuResetFilters");
-    const menuGrid = menuSection.querySelector("#tab-1 .row.g-4");
 
     const getMenuCardName = card =>
       card.getAttribute("data-menu-name") ||
@@ -193,10 +188,6 @@ document.addEventListener("DOMContentLoaded", () => {
       "";
     const getMenuCardPrice = card =>
       card.querySelector(".text-primary")?.textContent.trim() || "";
-    const getMenuCardPriceValue = card => {
-      const numericPrice = parseFloat(getMenuCardPrice(card).replace(/[^\d.]+/g, ""));
-      return Number.isFinite(numericPrice) ? numericPrice : 0;
-    };
     const normalizeText = value =>
       value
         .toLowerCase()
@@ -206,6 +197,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (menuTotalCount) {
       menuTotalCount.textContent = String(menuCards.length);
     }
+    let searchTerm = menuSearch ? normalizeText(menuSearch.value.trim()) : "";
 
     if (menuTitle && menuCards.length) {
       const daySeed = Math.floor(Date.now() / 86400000);
@@ -219,127 +211,33 @@ document.addEventListener("DOMContentLoaded", () => {
       menuTitle.insertAdjacentElement("afterend", spotlight);
     }
 
-    if (menuCards.length && filterButtons.length) {
-      let activeFilter = "all";
-      let searchTerm = menuSearch ? normalizeText(menuSearch.value.trim()) : "";
-      let activeSort = menuSort ? menuSort.value : "recommended";
-      const defaultMenuOrder = [...menuCards];
-      const filterLabelMap = {
-        all: "all dishes",
-        breakfast: "breakfast dishes",
-        lunch: "lunch dishes",
-        dinner: "dinner dishes",
-        drinks: "drinks"
-      };
-
-      const sortMenuCards = () => {
-        if (!menuGrid) return;
-
-        const sortedCards = [...menuCards];
-        if (activeSort === "price-low") {
-          sortedCards.sort((cardA, cardB) => getMenuCardPriceValue(cardA) - getMenuCardPriceValue(cardB));
-        } else if (activeSort === "price-high") {
-          sortedCards.sort((cardA, cardB) => getMenuCardPriceValue(cardB) - getMenuCardPriceValue(cardA));
-        } else if (activeSort === "name-asc") {
-          sortedCards.sort((cardA, cardB) => getMenuCardName(cardA).localeCompare(getMenuCardName(cardB)));
-        } else {
-          sortedCards.sort((cardA, cardB) => defaultMenuOrder.indexOf(cardA) - defaultMenuOrder.indexOf(cardB));
-        }
-
-        sortedCards.forEach(card => {
-          menuGrid.appendChild(card);
-        });
-      };
-
-      const updateFilterSummary = visibleCount => {
-        if (!menuFilterSummary) return;
-
-        const filterText = filterLabelMap[activeFilter] || "filtered dishes";
-        const searchText = searchTerm ? ` matching "${menuSearch?.value.trim() || ""}"` : "";
-        const sortText =
-          activeSort === "price-low"
-            ? "sorted by price low to high"
-            : activeSort === "price-high"
-              ? "sorted by price high to low"
-              : activeSort === "name-asc"
-                ? "sorted by name"
-                : "sorted by chef's picks";
-        menuFilterSummary.textContent = `Showing ${visibleCount} ${filterText}${searchText}, ${sortText}.`;
-      };
-
-      const updateMenuVisibility = () => {
-        let visibleCount = 0;
-        menuCards.forEach(card => {
-          const categories = (card.getAttribute("data-menu-category") || "")
-            .split(/\s+/)
-            .filter(Boolean);
-          const menuName = normalizeText(getMenuCardName(card));
-          const matchesFilter = activeFilter === "all" || categories.includes(activeFilter);
-          const matchesSearch = !searchTerm || menuName.includes(searchTerm);
-          const isVisible = matchesFilter && matchesSearch;
-
-          card.classList.toggle("d-none", !isVisible);
-          if (isVisible) visibleCount += 1;
-        });
-
-        sortMenuCards();
-
-        if (menuVisibleCount) {
-          menuVisibleCount.textContent = String(visibleCount);
-        }
-        if (menuEmptyState) {
-          menuEmptyState.textContent = "No menu items matched your filters.";
-          menuEmptyState.classList.toggle("d-none", visibleCount !== 0);
-        }
-        updateFilterSummary(visibleCount);
-      };
-
-      const setActiveFilter = filter => {
-        activeFilter = filter;
-        filterButtons.forEach(button => {
-          const isActive = button.dataset.menuFilter === activeFilter;
-          button.classList.toggle("active", isActive);
-          button.setAttribute("aria-pressed", String(isActive));
-        });
-        updateMenuVisibility();
-      };
-
-      filterButtons.forEach(button => {
-        button.addEventListener("click", () => {
-          setActiveFilter(button.dataset.menuFilter || "all");
-        });
+    const updateMenuVisibility = () => {
+      let visibleCount = 0;
+      menuCards.forEach(card => {
+        const menuName = normalizeText(getMenuCardName(card));
+        const isVisible = !searchTerm || menuName.includes(searchTerm);
+        card.classList.toggle("d-none", !isVisible);
+        if (isVisible) visibleCount += 1;
       });
 
-      if (menuSearch) {
-        menuSearch.addEventListener("input", () => {
-          searchTerm = normalizeText(menuSearch.value.trim());
-          updateMenuVisibility();
-        });
+      if (menuVisibleCount) {
+        menuVisibleCount.textContent = String(visibleCount);
       }
 
-      if (menuSort) {
-        menuSort.addEventListener("change", () => {
-          activeSort = menuSort.value;
-          updateMenuVisibility();
-        });
+      if (menuEmptyState) {
+        menuEmptyState.textContent = "No menu items matched your search.";
+        menuEmptyState.classList.toggle("d-none", visibleCount !== 0);
       }
+    };
 
-      if (menuResetFilters) {
-        menuResetFilters.addEventListener("click", () => {
-          if (menuSearch) {
-            menuSearch.value = "";
-            searchTerm = "";
-          }
-          if (menuSort) {
-            menuSort.value = "recommended";
-            activeSort = "recommended";
-          }
-          setActiveFilter("all");
-        });
-      }
-
-      setActiveFilter("all");
+    if (menuSearch) {
+      menuSearch.addEventListener("input", () => {
+        searchTerm = normalizeText(menuSearch.value.trim());
+        updateMenuVisibility();
+      });
     }
+
+    updateMenuVisibility();
   }
 
   const openingTitle = Array.from(document.querySelectorAll("#contact h4.section-title")).find(
@@ -494,6 +392,215 @@ document.addEventListener("DOMContentLoaded", () => {
       });
       newsletterInput.addEventListener("change", updateNewsletterButtonState);
       updateNewsletterButtonState();
+    }
+  }
+
+  const feedbackTitle = Array.from(document.querySelectorAll("#contact h4.section-title")).find(
+    title => title.textContent.trim() === "Feedback"
+  );
+  if (feedbackTitle) {
+    const feedbackSection = feedbackTitle.closest(".col-lg-3");
+    const feedbackForm = feedbackSection ? feedbackSection.querySelector("#feedbackForm") : null;
+    const feedbackNameInput = feedbackForm ? feedbackForm.querySelector("#feedbackName") : null;
+    const feedbackMessageInput = feedbackForm ? feedbackForm.querySelector("#feedbackMessage") : null;
+    const feedbackImageInput = feedbackForm ? feedbackForm.querySelector("#feedbackImage") : null;
+    const feedbackSubmitButton = feedbackForm ? feedbackForm.querySelector("#feedbackSubmitButton") : null;
+    const feedbackPreview = feedbackForm ? feedbackForm.querySelector("#feedbackPreview") : null;
+    const feedbackAlert = document.getElementById("feedbackFeedback");
+
+    if (
+      feedbackForm &&
+      feedbackNameInput &&
+      feedbackMessageInput &&
+      feedbackImageInput &&
+      feedbackSubmitButton &&
+      feedbackPreview
+    ) {
+      const feedbackStorageKey = "salt-smoke-feedback-submissions";
+      const maxImageSizeBytes = 2 * 1024 * 1024;
+      const allowedImageTypes = new Set(["image/jpeg", "image/jpg", "image/png", "image/gif", "image/webp"]);
+      feedbackForm.noValidate = true;
+      feedbackMessageInput.required = true;
+      feedbackImageInput.required = true;
+
+      const setFeedbackFieldInvalid = (field, message) => {
+        field.setAttribute("aria-invalid", "true");
+        field.setCustomValidity(message);
+      };
+      const clearFeedbackFieldValidity = field => {
+        field.removeAttribute("aria-invalid");
+        field.setCustomValidity("");
+      };
+
+      const getSelectedImage = () =>
+        feedbackImageInput.files && feedbackImageInput.files.length > 0 ? feedbackImageInput.files[0] : null;
+      const isMessageValid = () => feedbackMessageInput.value.trim().length >= 10;
+      const isImageFileValid = () => {
+        const imageFile = getSelectedImage();
+        if (!imageFile) return false;
+        if (!allowedImageTypes.has(imageFile.type)) return false;
+        if (imageFile.size > maxImageSizeBytes) return false;
+        return true;
+      };
+      const isFeedbackFormReady = () => isMessageValid() && isImageFileValid();
+
+      const updateFeedbackSubmitButtonState = () => {
+        feedbackSubmitButton.disabled = !isFeedbackFormReady();
+      };
+
+      const readAsDataUrl = file =>
+        new Promise(resolve => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(typeof reader.result === "string" ? reader.result : "");
+          reader.onerror = () => resolve("");
+          reader.readAsDataURL(file);
+        });
+
+      const updateFeedbackImagePreview = async () => {
+        const imageFile = getSelectedImage();
+        if (!imageFile || !isImageFileValid()) {
+          feedbackPreview.classList.add("d-none");
+          feedbackPreview.removeAttribute("src");
+          return;
+        }
+
+        const imageDataUrl = await readAsDataUrl(imageFile);
+        if (!imageDataUrl) {
+          feedbackPreview.classList.add("d-none");
+          feedbackPreview.removeAttribute("src");
+          return;
+        }
+        feedbackPreview.src = imageDataUrl;
+        feedbackPreview.classList.remove("d-none");
+      };
+
+      const validateFeedbackForm = async () => {
+        const feedbackMessage = feedbackMessageInput.value.trim();
+        if (!feedbackMessage) {
+          setFeedbackFieldInvalid(
+            feedbackMessageInput,
+            "Please share your feedback before sending your message."
+          );
+          feedbackMessageInput.reportValidity();
+          showAlertMessage(feedbackAlert, "danger", "Please enter your feedback before sending.");
+          feedbackMessageInput.focus();
+          return false;
+        }
+
+        if (!isMessageValid()) {
+          setFeedbackFieldInvalid(
+            feedbackMessageInput,
+            "Please provide at least 10 characters so we can understand your feedback."
+          );
+          feedbackMessageInput.reportValidity();
+          showAlertMessage(
+            feedbackAlert,
+            "danger",
+            "Please provide at least 10 characters in your feedback message."
+          );
+          feedbackMessageInput.focus();
+          return false;
+        }
+
+        clearFeedbackFieldValidity(feedbackMessageInput);
+
+        const imageFile = getSelectedImage();
+        if (!imageFile) {
+          setFeedbackFieldInvalid(feedbackImageInput, "Please attach an image with your feedback.");
+          feedbackImageInput.reportValidity();
+          showAlertMessage(feedbackAlert, "danger", "Please add an image to submit feedback.");
+          feedbackImageInput.focus();
+          return false;
+        }
+
+        if (!allowedImageTypes.has(imageFile.type)) {
+          setFeedbackFieldInvalid(
+            feedbackImageInput,
+            "Please upload a JPG, PNG, GIF, or WebP image file."
+          );
+          feedbackImageInput.reportValidity();
+          showAlertMessage(
+            feedbackAlert,
+            "danger",
+            "Unsupported image format. Please upload a JPG, PNG, GIF, or WebP file."
+          );
+          feedbackImageInput.focus();
+          return false;
+        }
+
+        if (imageFile.size > maxImageSizeBytes) {
+          setFeedbackFieldInvalid(feedbackImageInput, "Image size must be 2MB or less.");
+          feedbackImageInput.reportValidity();
+          showAlertMessage(feedbackAlert, "danger", "Image is too large. Please upload an image up to 2MB.");
+          feedbackImageInput.focus();
+          return false;
+        }
+
+        clearFeedbackFieldValidity(feedbackImageInput);
+        await updateFeedbackImagePreview();
+        return true;
+      };
+
+      const saveFeedbackSubmission = async () => {
+        const imageFile = getSelectedImage();
+        if (!imageFile) return;
+
+        const savedSubmissionsRaw = localStorage.getItem(feedbackStorageKey);
+        let savedSubmissions = [];
+        if (savedSubmissionsRaw) {
+          try {
+            savedSubmissions = JSON.parse(savedSubmissionsRaw);
+          } catch (error) {
+            localStorage.removeItem(feedbackStorageKey);
+            savedSubmissions = [];
+          }
+        }
+        const imageDataUrl = await readAsDataUrl(imageFile);
+        savedSubmissions.push({
+          name: feedbackNameInput.value.trim(),
+          message: feedbackMessageInput.value.trim(),
+          imageDataUrl,
+          imageName: imageFile.name,
+          submittedAt: new Date().toISOString()
+        });
+
+        const recentSubmissions = savedSubmissions.slice(-10);
+        localStorage.setItem(feedbackStorageKey, JSON.stringify(recentSubmissions));
+      };
+
+      feedbackForm.addEventListener("submit", async event => {
+        event.preventDefault();
+        if (!(await validateFeedbackForm())) {
+          updateFeedbackSubmitButtonState();
+          return;
+        }
+
+        await saveFeedbackSubmission();
+        showAlertMessage(feedbackAlert, "success", "Thanks for your feedback. Your message and image were sent.");
+        feedbackForm.reset();
+        feedbackPreview.classList.add("d-none");
+        feedbackPreview.removeAttribute("src");
+        clearFeedbackFieldValidity(feedbackMessageInput);
+        clearFeedbackFieldValidity(feedbackImageInput);
+        updateFeedbackSubmitButtonState();
+      });
+
+      feedbackMessageInput.addEventListener("input", () => {
+        clearFeedbackFieldValidity(feedbackMessageInput);
+        hideAlertMessage(feedbackAlert);
+        updateFeedbackSubmitButtonState();
+      });
+      feedbackMessageInput.addEventListener("change", updateFeedbackSubmitButtonState);
+
+      feedbackImageInput.addEventListener("change", async () => {
+        clearFeedbackFieldValidity(feedbackImageInput);
+        hideAlertMessage(feedbackAlert);
+        await updateFeedbackImagePreview();
+        updateFeedbackSubmitButtonState();
+      });
+      feedbackImageInput.addEventListener("input", updateFeedbackSubmitButtonState);
+      feedbackNameInput.addEventListener("input", () => hideAlertMessage(feedbackAlert));
+      updateFeedbackSubmitButtonState();
     }
   }
 
