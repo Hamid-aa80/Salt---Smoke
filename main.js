@@ -107,6 +107,106 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  const openingTitle = Array.from(document.querySelectorAll("#contact h4.section-title")).find(
+    title => title.textContent.trim() === "Opening"
+  );
+  if (openingTitle) {
+    const openingSection = openingTitle.closest(".col-lg-3");
+    const statusLabel = document.createElement("p");
+    statusLabel.className = "text-primary fw-semibold mb-3";
+    openingTitle.insertAdjacentElement("afterend", statusLabel);
+
+    const schedule = {
+      monday: [9, 21],
+      tuesday: [9, 21],
+      wednesday: [9, 21],
+      thursday: [9, 21],
+      friday: [9, 21],
+      saturday: [10, 25],
+      sunday: [10, 24]
+    };
+
+    const getDayName = dayIndex =>
+      ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"][dayIndex];
+
+    const formatHour = hour => `${String(hour % 24).padStart(2, "0")}:00`;
+
+    const updateOpeningStatus = () => {
+      const now = new Date();
+      const dayName = getDayName(now.getDay());
+      const daySchedule = schedule[dayName];
+      if (!daySchedule) return;
+
+      const [openHour, closeHour] = daySchedule;
+      const currentHourValue = now.getHours() + now.getMinutes() / 60;
+      const isOpen = currentHourValue >= openHour && currentHourValue < closeHour;
+
+      statusLabel.textContent = isOpen
+        ? `Open now • Closes at ${formatHour(closeHour)}`
+        : `Currently closed • Opens at ${formatHour(openHour)}`;
+    };
+
+    updateOpeningStatus();
+    window.setInterval(updateOpeningStatus, 60000);
+
+    if (openingSection) {
+      openingSection.setAttribute("aria-live", "polite");
+    }
+  }
+
+  const newsletterTitle = Array.from(document.querySelectorAll("#contact h4.section-title")).find(
+    title => title.textContent.trim() === "Newsletter"
+  );
+  if (newsletterTitle) {
+    const newsletterSection = newsletterTitle.closest(".col-lg-3");
+    const newsletterInput = newsletterSection
+      ? newsletterSection.querySelector('input[placeholder="Your email"]')
+      : null;
+    const newsletterButton = newsletterSection
+      ? newsletterSection.querySelector('button[type="button"]')
+      : null;
+
+    if (newsletterInput && newsletterButton) {
+      const newsletterStorageKey = "salt-smoke-newsletter-email";
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const existingNewsletterEmail = localStorage.getItem(newsletterStorageKey);
+      if (existingNewsletterEmail) {
+        newsletterInput.value = existingNewsletterEmail;
+      }
+
+      const feedback = document.createElement("p");
+      feedback.className = "small mt-2 mb-0";
+      newsletterButton.insertAdjacentElement("afterend", feedback);
+
+      const subscribe = () => {
+        const email = newsletterInput.value.trim();
+        if (!emailPattern.test(email)) {
+          newsletterInput.setCustomValidity("Please enter a valid email to subscribe.");
+          newsletterInput.reportValidity();
+          feedback.className = "small text-warning mt-2 mb-0";
+          feedback.textContent = "Please provide a valid email address.";
+          return;
+        }
+
+        newsletterInput.setCustomValidity("");
+        localStorage.setItem(newsletterStorageKey, email);
+        feedback.className = "small text-success mt-2 mb-0";
+        feedback.textContent = "Thanks for subscribing. We'll keep you updated.";
+      };
+
+      newsletterButton.addEventListener("click", subscribe);
+      newsletterInput.addEventListener("keydown", event => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          subscribe();
+        }
+      });
+      newsletterInput.addEventListener("input", () => {
+        newsletterInput.setCustomValidity("");
+      });
+    }
+  }
+
   const reservationSection = document.getElementById("reservation");
   const reservationForm = reservationSection
     ? reservationSection.querySelector("form")
