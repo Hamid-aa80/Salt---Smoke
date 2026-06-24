@@ -189,14 +189,18 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const validateReservationForm = () => {
-    if (!nameInput || !emailInput || !dateInput) return false;
+    if (!nameInput || !emailInput || !dateInput || !peopleSelect || !messageInput) {
+      return false;
+    }
 
     const name = nameInput.value.trim();
     const email = emailInput.value.trim();
     const date = dateInput.value;
+    const guests = Number.parseInt(peopleSelect.value, 10);
+    const request = messageInput.value.trim();
 
-    if (name.length < 2) {
-      nameInput.setCustomValidity("Please enter your full name.");
+    if (!/^[A-Za-z][A-Za-z\s'-]{1,}$/.test(name)) {
+      nameInput.setCustomValidity("Please enter a valid full name.");
       nameInput.reportValidity();
       nameInput.focus();
       return false;
@@ -226,27 +230,55 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     dateInput.setCustomValidity("");
 
+    if (!Number.isInteger(guests) || guests < 1) {
+      peopleSelect.setCustomValidity("Please select the number of guests.");
+      peopleSelect.reportValidity();
+      peopleSelect.focus();
+      return false;
+    }
+    peopleSelect.setCustomValidity("");
+
+    if (request.length < 5) {
+      messageInput.setCustomValidity("Please enter at least 5 characters for your request.");
+      messageInput.reportValidity();
+      messageInput.focus();
+      return false;
+    }
+    messageInput.setCustomValidity("");
+
     return true;
   };
 
   const isReservationFormReady = () => {
-    if (!nameInput || !emailInput || !dateInput) return false;
+    if (!nameInput || !emailInput || !dateInput || !peopleSelect || !messageInput) {
+      return false;
+    }
 
     const name = nameInput.value.trim();
     const email = emailInput.value.trim();
     const date = dateInput.value;
+    const guests = Number.parseInt(peopleSelect.value, 10);
+    const request = messageInput.value.trim();
 
     return (
-      name.length >= 2 &&
+      /^[A-Za-z][A-Za-z\s'-]{1,}$/.test(name) &&
       /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) &&
       Boolean(date) &&
-      date >= today
+      date >= today &&
+      Number.isInteger(guests) &&
+      guests > 0 &&
+      request.length >= 5
     );
   };
 
   const updateSubmitButtonState = () => {
     if (!submitButton) return;
     submitButton.disabled = !isReservationFormReady();
+  };
+
+  const clearFieldValidity = field => {
+    if (!field) return;
+    field.setCustomValidity("");
   };
 
   reservationForm.addEventListener("submit", event => {
@@ -260,7 +292,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    dateInput.setCustomValidity("");
+    [nameInput, emailInput, dateInput, peopleSelect, messageInput].forEach(clearFieldValidity);
     saveDraft();
   });
 
@@ -271,8 +303,10 @@ document.addEventListener("DOMContentLoaded", () => {
     field.addEventListener("input", updateReservationSummary);
     field.addEventListener("change", updateReservationSummary);
   });
-  [nameInput, emailInput, dateInput].forEach(field => {
+  [nameInput, emailInput, dateInput, peopleSelect, messageInput].forEach(field => {
     if (!field) return;
+    field.addEventListener("input", () => clearFieldValidity(field));
+    field.addEventListener("change", () => clearFieldValidity(field));
     field.addEventListener("input", updateSubmitButtonState);
     field.addEventListener("change", updateSubmitButtonState);
   });
