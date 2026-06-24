@@ -318,24 +318,47 @@ document.addEventListener("DOMContentLoaded", () => {
   );
   if (newsletterTitle) {
     const newsletterSection = newsletterTitle.closest(".col-lg-3");
-    const newsletterInput = newsletterSection
-      ? newsletterSection.querySelector('input[placeholder="Your email"]')
-      : null;
-    const newsletterButton = newsletterSection
-      ? newsletterSection.querySelector('button[type="button"]')
-      : null;
-    if (newsletterInput && newsletterButton) {
+    const newsletterForm = newsletterSection ? newsletterSection.querySelector("#newsletterForm") : null;
+    const newsletterInput = newsletterForm ? newsletterForm.querySelector("#newsletterEmail") : null;
+    const newsletterButton = newsletterForm ? newsletterForm.querySelector('button[type="submit"]') : null;
+    if (newsletterForm && newsletterInput && newsletterButton) {
       const newsletterStorageKey = "salt-smoke-newsletter-email";
       const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       const newsletterFeedback = document.getElementById("newsletterFeedback");
+      newsletterForm.noValidate = true;
+      newsletterInput.required = true;
+
       const existingNewsletterEmail = localStorage.getItem(newsletterStorageKey);
       if (existingNewsletterEmail) {
         newsletterInput.value = existingNewsletterEmail;
       }
 
-      const subscribe = () => {
+      const updateNewsletterButtonState = () => {
+        newsletterButton.disabled = newsletterInput.value.trim().length === 0;
+      };
+
+      const clearNewsletterValidity = () => {
+        newsletterInput.setCustomValidity("");
+        newsletterInput.removeAttribute("aria-invalid");
+      };
+
+      const validateNewsletterEmail = () => {
         const email = newsletterInput.value.trim();
+        if (!email) {
+          newsletterInput.setAttribute("aria-invalid", "true");
+          newsletterInput.setCustomValidity("Please enter your email address to subscribe.");
+          newsletterInput.reportValidity();
+          showAlertMessage(
+            newsletterFeedback,
+            "danger",
+            "Please enter your email address to subscribe to the newsletter."
+          );
+          newsletterInput.focus();
+          return false;
+        }
+
         if (!emailPattern.test(email)) {
+          newsletterInput.setAttribute("aria-invalid", "true");
           newsletterInput.setCustomValidity("Please enter a valid email to subscribe.");
           newsletterInput.reportValidity();
           showAlertMessage(
@@ -343,29 +366,41 @@ document.addEventListener("DOMContentLoaded", () => {
             "danger",
             "Please enter a valid email address so we can send your newsletter updates."
           );
+          newsletterInput.focus();
+          return false;
+        }
+
+        clearNewsletterValidity();
+        return true;
+      };
+
+      const subscribe = () => {
+        if (!validateNewsletterEmail()) {
           return;
         }
 
-        newsletterInput.setCustomValidity("");
+        const email = newsletterInput.value.trim();
         localStorage.setItem(newsletterStorageKey, email);
         showAlertMessage(
           newsletterFeedback,
           "success",
           `You're subscribed with ${email}. We'll send offers, news, and menu updates to this inbox.`
         );
+        updateNewsletterButtonState();
       };
 
-      newsletterButton.addEventListener("click", subscribe);
-      newsletterInput.addEventListener("keydown", event => {
-        if (event.key === "Enter") {
-          event.preventDefault();
-          subscribe();
-        }
+      newsletterForm.addEventListener("submit", event => {
+        event.preventDefault();
+        subscribe();
       });
+
       newsletterInput.addEventListener("input", () => {
-        newsletterInput.setCustomValidity("");
+        clearNewsletterValidity();
         hideAlertMessage(newsletterFeedback);
+        updateNewsletterButtonState();
       });
+      newsletterInput.addEventListener("change", updateNewsletterButtonState);
+      updateNewsletterButtonState();
     }
   }
 
