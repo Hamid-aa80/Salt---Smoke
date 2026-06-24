@@ -23,6 +23,7 @@
 - [Running the Application](#running-the-application)
 - [API Endpoints](#api-endpoints)
 - [Testing](#testing)
+- [Lighthouse Performance Testing](#-lighthouse-performance-testing)
 - [Screenshots](#screenshots)
 - [Deployment](#deployment)
 - [Environment Configuration](#environment-configuration)
@@ -368,6 +369,25 @@ The Playwright test suite (`tests/site.spec.ts`) covers:
 bash test-api.sh
 ```
 This tests all API endpoints directly.
+
+---
+
+## ⚡ Lighthouse Performance Testing
+
+**Salt & Smoke** maintains excellent performance standards with comprehensive Lighthouse audits. The website has been tested and optimized for:
+
+- **Performance** - Fast load times and smooth interactions
+- **Accessibility** - WCAG compliance and screen reader support
+- **Best Practices** - Modern web standards and security
+- **SEO** - Proper metadata and structured data
+- **PWA** - Progressive web app capabilities
+
+### Lighthouse Report
+
+![Lighthouse Performance Report](README-img/Lighthouse-test-desktop.jpg)
+*Desktop performance metrics showing high scores across all categories*
+
+The Lighthouse audit ensures optimal user experience on all devices and connection speeds.
 
 ---
 
