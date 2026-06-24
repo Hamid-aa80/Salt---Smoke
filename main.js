@@ -779,20 +779,90 @@ document.addEventListener("DOMContentLoaded", () => {
   const isValidGuestNumber = guests => allowedGuestCounts.has(guests);
   const isValidRequest = request => request.length >= 5;
 
+  const setFieldInvalid = (field, message) => {
+    if (!field) return;
+    field.setAttribute("aria-invalid", "true");
+    field.setCustomValidity(message);
+  };
+
+  const clearFieldValidity = field => {
+    if (!field) return;
+    field.removeAttribute("aria-invalid");
+    field.setCustomValidity("");
+  };
+
+  const validateReservationField = (field, shouldReport = false) => {
+    if (!field) return true;
+
+    if (field === nameInput) {
+      const name = nameInput.value.trim();
+      if (!isValidName(name)) {
+        setFieldInvalid(nameInput, "Please enter a valid full name.");
+        if (shouldReport) nameInput.reportValidity();
+        return false;
+      }
+      clearFieldValidity(nameInput);
+      return true;
+    }
+
+    if (field === emailInput) {
+      const email = emailInput.value.trim();
+      if (!isValidEmail(email)) {
+        setFieldInvalid(emailInput, "Please enter a valid email address.");
+        if (shouldReport) emailInput.reportValidity();
+        return false;
+      }
+      clearFieldValidity(emailInput);
+      return true;
+    }
+
+    if (field === dateInput) {
+      const date = dateInput.value;
+      if (!date) {
+        setFieldInvalid(dateInput, "Please choose a reservation date.");
+        if (shouldReport) dateInput.reportValidity();
+        return false;
+      }
+      if (!isValidDate(date)) {
+        setFieldInvalid(dateInput, "Reservation date cannot be in the past.");
+        if (shouldReport) dateInput.reportValidity();
+        return false;
+      }
+      clearFieldValidity(dateInput);
+      return true;
+    }
+
+    if (field === peopleSelect) {
+      const guests = peopleSelect.value;
+      if (!isValidGuestNumber(guests)) {
+        setFieldInvalid(peopleSelect, "Please select the number of guests.");
+        if (shouldReport) peopleSelect.reportValidity();
+        return false;
+      }
+      clearFieldValidity(peopleSelect);
+      return true;
+    }
+
+    if (field === messageInput) {
+      const request = messageInput.value.trim();
+      if (!isValidRequest(request)) {
+        setFieldInvalid(messageInput, "Please enter at least 5 characters for your request.");
+        if (shouldReport) messageInput.reportValidity();
+        return false;
+      }
+      clearFieldValidity(messageInput);
+      return true;
+    }
+
+    return true;
+  };
+
   const validateReservationForm = () => {
     if (!nameInput || !emailInput || !dateInput || !peopleSelect || !messageInput) {
       return false;
     }
 
-    const name = nameInput.value.trim();
-    const email = emailInput.value.trim();
-    const date = dateInput.value;
-    const guests = peopleSelect.value;
-    const request = messageInput.value.trim();
-
-    if (!isValidName(name)) {
-      nameInput.setCustomValidity("Please enter a valid full name.");
-      nameInput.reportValidity();
+    if (!validateReservationField(nameInput, true)) {
       showAlertMessage(
         reservationFeedback,
         "danger",
@@ -801,11 +871,8 @@ document.addEventListener("DOMContentLoaded", () => {
       nameInput.focus();
       return false;
     }
-    nameInput.setCustomValidity("");
 
-    if (!isValidEmail(email)) {
-      emailInput.setCustomValidity("Please enter a valid email address.");
-      emailInput.reportValidity();
+    if (!validateReservationField(emailInput, true)) {
       showAlertMessage(
         reservationFeedback,
         "danger",
@@ -814,41 +881,27 @@ document.addEventListener("DOMContentLoaded", () => {
       emailInput.focus();
       return false;
     }
-    emailInput.setCustomValidity("");
 
-    if (!date) {
-      dateInput.setCustomValidity("Please choose a reservation date.");
-      dateInput.reportValidity();
-      showAlertMessage(reservationFeedback, "danger", "Please choose a reservation date to continue.");
-      dateInput.focus();
-      return false;
-    }
-
-    if (!isValidDate(date)) {
-      dateInput.setCustomValidity("Reservation date cannot be in the past.");
-      dateInput.reportValidity();
+    if (!validateReservationField(dateInput, true)) {
+      const hasDate = Boolean(dateInput.value);
       showAlertMessage(
         reservationFeedback,
         "danger",
-        "Your reservation date must be today or later."
+        hasDate
+          ? "Your reservation date must be today or later."
+          : "Please choose a reservation date to continue."
       );
       dateInput.focus();
       return false;
     }
-    dateInput.setCustomValidity("");
 
-    if (!isValidGuestNumber(guests)) {
-      peopleSelect.setCustomValidity("Please select the number of guests.");
-      peopleSelect.reportValidity();
+    if (!validateReservationField(peopleSelect, true)) {
       showAlertMessage(reservationFeedback, "danger", "Please select how many guests are coming.");
       peopleSelect.focus();
       return false;
     }
-    peopleSelect.setCustomValidity("");
 
-    if (!isValidRequest(request)) {
-      messageInput.setCustomValidity("Please enter at least 5 characters for your request.");
-      messageInput.reportValidity();
+    if (!validateReservationField(messageInput, true)) {
       showAlertMessage(
         reservationFeedback,
         "danger",
@@ -857,7 +910,6 @@ document.addEventListener("DOMContentLoaded", () => {
       messageInput.focus();
       return false;
     }
-    messageInput.setCustomValidity("");
 
     return true;
   };
@@ -885,11 +937,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const updateSubmitButtonState = () => {
     if (!submitButton) return;
     submitButton.disabled = !isReservationFormReady();
-  };
-
-  const clearFieldValidity = field => {
-    if (!field) return;
-    field.setCustomValidity("");
   };
 
   reservationForm.addEventListener("submit", event => {
@@ -936,8 +983,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   [nameInput, emailInput, dateInput, peopleSelect, messageInput].forEach(field => {
     if (!field) return;
+    field.addEventListener("blur", () => validateReservationField(field, true));
     field.addEventListener("input", () => clearFieldValidity(field));
-    field.addEventListener("change", () => clearFieldValidity(field));
+    field.addEventListener("change", () => validateReservationField(field));
     field.addEventListener("input", () => hideAlertMessage(reservationFeedback));
     field.addEventListener("change", () => hideAlertMessage(reservationFeedback));
     field.addEventListener("input", updateSubmitButtonState);

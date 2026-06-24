@@ -42,8 +42,7 @@ Call log:
           - /url: "#service"
         - link "Menu" [ref=e12] [cursor=pointer]:
           - /url: "#menu"
-        - link "Reservation" [ref=e13] [cursor=pointer]:
-          - /url: "#reservation"
+        - button "Reservation" [ref=e13] [cursor=pointer]
         - link "Contact" [ref=e14] [cursor=pointer]:
           - /url: "#contact"
     - generic [ref=e18]:
