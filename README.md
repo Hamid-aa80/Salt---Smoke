@@ -69,6 +69,7 @@ The site was checked across the following areas:
 - Successful reservation submissions show the confirmation page and clear the saved draft.
 - Invalid input keeps the user on the form and displays clear feedback instead of failing silently.
 - The site remains usable with reduced-motion preferences enabled.
+- Run the automated browser tests with `npm test`.
 
 ## Local development
 
