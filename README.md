@@ -1,5 +1,9 @@
 # 🍖 Salt & Smoke
 
+![Responsive Design](https://img.shields.io/badge/Responsive-💻%20%7C%20📱%20%7C%20⌨️-brightgreen)
+
+**💻 Laptop • 📱 Tablet • ⌨️ Mobile Phone**
+
 > A premium restaurant website for an upscale smokehouse dining concept in Watford, combining elegant design with a fully-functional backend API.
 
 ![Salt & Smoke homepage](README-img/Home-page.png)
@@ -423,29 +427,6 @@ To deploy:
 1. Push changes to the `main` branch
 2. GitHub Pages automatically rebuilds and deploys
 
-### Backend Deployment
-
-Deploy the Node.js server to:
-- **Railway** (recommended)
-- **Render**
-- **Heroku**
-- **DigitalOcean**
-- **AWS EC2**
-- **Any VPS**
-
-#### General Deployment Steps:
-1. Push your code to GitHub
-2. Connect your hosting provider to the repository
-3. Set environment variables (PORT, NODE_ENV)
-4. Deploy with: `npm install && npm start`
-
-#### Example: Railway Deployment
-1. Create account at [Railway.app](https://railway.app)
-2. Connect GitHub repository
-3. Set `PORT=5000` environment variable
-4. Deploy
-
-For detailed deployment instructions, see `DEPLOYMENT.md`.
 
 ---
 
