@@ -184,24 +184,40 @@
                                         <input id="menuSearch" type="search" class="form-control menu-search"
                                             placeholder="Try burger, coffee, steak, or beer">
                                     </div>
-                                    <div class="menu-filter-group d-flex flex-wrap gap-2" role="group"
-                                        aria-label="Filter menu items">
-                                        <button type="button" class="btn btn-outline-primary active"
-                                            data-menu-filter="all" aria-pressed="true">All</button>
-                                        <button type="button" class="btn btn-outline-primary"
-                                            data-menu-filter="breakfast" aria-pressed="false">Breakfast</button>
-                                        <button type="button" class="btn btn-outline-primary"
-                                            data-menu-filter="lunch" aria-pressed="false">Lunch</button>
-                                        <button type="button" class="btn btn-outline-primary"
-                                            data-menu-filter="dinner" aria-pressed="false">Dinner</button>
-                                        <button type="button" class="btn btn-outline-primary"
-                                            data-menu-filter="drinks" aria-pressed="false">Drinks</button>
+                                    <div class="menu-controls d-flex flex-column gap-2 align-items-lg-end">
+                                        <div class="menu-filter-group d-flex flex-wrap gap-2 justify-content-lg-end" role="group"
+                                            aria-label="Filter menu items">
+                                            <button type="button" class="btn btn-outline-primary active"
+                                                data-menu-filter="all" aria-pressed="true">All</button>
+                                            <button type="button" class="btn btn-outline-primary"
+                                                data-menu-filter="breakfast" aria-pressed="false">Breakfast</button>
+                                            <button type="button" class="btn btn-outline-primary"
+                                                data-menu-filter="lunch" aria-pressed="false">Lunch</button>
+                                            <button type="button" class="btn btn-outline-primary"
+                                                data-menu-filter="dinner" aria-pressed="false">Dinner</button>
+                                            <button type="button" class="btn btn-outline-primary"
+                                                data-menu-filter="drinks" aria-pressed="false">Drinks</button>
+                                        </div>
+                                        <div class="menu-controls-row d-flex flex-wrap gap-2 justify-content-lg-end">
+                                            <select id="menuSort" class="form-select menu-sort" aria-label="Sort menu items">
+                                                <option value="recommended" selected>Sort: Chef's picks</option>
+                                                <option value="price-low">Price: Low to high</option>
+                                                <option value="price-high">Price: High to low</option>
+                                                <option value="name-asc">Name: A to Z</option>
+                                            </select>
+                                            <button id="menuResetFilters" type="button" class="btn btn-outline-light">
+                                                Reset filters
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
                                     <p class="text-white-50 mb-0">
                                         Showing <span id="menuVisibleCount">6</span> of <span id="menuTotalCount">6</span>
                                         dishes
+                                    </p>
+                                    <p id="menuFilterSummary" class="text-white-50 mb-0" aria-live="polite" aria-atomic="true">
+                                        Showing all dishes
                                     </p>
                                 </div>
                                 <div id="menuResults" class="tab-content">

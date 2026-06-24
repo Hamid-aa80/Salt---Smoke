@@ -182,8 +182,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const menuVisibleCount = menuSection.querySelector("#menuVisibleCount");
     const menuTotalCount = menuSection.querySelector("#menuTotalCount");
     const menuEmptyState = menuSection.querySelector("#menuEmptyState");
+    const menuFilterSummary = menuSection.querySelector("#menuFilterSummary");
     const menuFilterGroup = menuSection.querySelector(".menu-filter-group");
     const menuStatusRow = menuSection.querySelector(".d-flex.justify-content-between");
+    const menuSort = menuSection.querySelector("#menuSort");
+    const menuResetFilters = menuSection.querySelector("#menuResetFilters");
+    const menuGrid = menuSection.querySelector("#tab-1 .row.g-4");
     const menuFavouritesStorageKey = "salt-smoke-menu-favourites";
 
     const getMenuCardName = card =>
@@ -192,6 +196,10 @@ document.addEventListener("DOMContentLoaded", () => {
       "";
     const getMenuCardPrice = card =>
       card.querySelector(".text-primary")?.textContent.trim() || "";
+    const getMenuCardPriceValue = card => {
+      const numericPrice = parseFloat(getMenuCardPrice(card).replace(/[^\d.]+/g, ""));
+      return Number.isFinite(numericPrice) ? numericPrice : 0;
+    };
     const normalizeText = value =>
       value
         .toLowerCase()
@@ -314,7 +322,17 @@ document.addEventListener("DOMContentLoaded", () => {
     if (menuCards.length && filterButtons.length) {
       let activeFilter = "all";
       let searchTerm = menuSearch ? normalizeText(menuSearch.value.trim()) : "";
+      let activeSort = menuSort ? menuSort.value : "recommended";
       let favouritesFilterButton = null;
+      const defaultMenuOrder = [...menuCards];
+      const filterLabelMap = {
+        all: "all dishes",
+        breakfast: "breakfast dishes",
+        lunch: "lunch dishes",
+        dinner: "dinner dishes",
+        drinks: "drinks",
+        favorites: "favourite dishes"
+      };
 
       if (menuFilterGroup) {
         favouritesFilterButton = document.createElement("button");
@@ -325,6 +343,41 @@ document.addEventListener("DOMContentLoaded", () => {
         menuFilterGroup.appendChild(favouritesFilterButton);
         filterButtons.push(favouritesFilterButton);
       }
+
+      const sortMenuCards = () => {
+        if (!menuGrid) return;
+
+        const sortedCards = [...menuCards];
+        if (activeSort === "price-low") {
+          sortedCards.sort((cardA, cardB) => getMenuCardPriceValue(cardA) - getMenuCardPriceValue(cardB));
+        } else if (activeSort === "price-high") {
+          sortedCards.sort((cardA, cardB) => getMenuCardPriceValue(cardB) - getMenuCardPriceValue(cardA));
+        } else if (activeSort === "name-asc") {
+          sortedCards.sort((cardA, cardB) => getMenuCardName(cardA).localeCompare(getMenuCardName(cardB)));
+        } else {
+          sortedCards.sort((cardA, cardB) => defaultMenuOrder.indexOf(cardA) - defaultMenuOrder.indexOf(cardB));
+        }
+
+        sortedCards.forEach(card => {
+          menuGrid.appendChild(card);
+        });
+      };
+
+      const updateFilterSummary = visibleCount => {
+        if (!menuFilterSummary) return;
+
+        const filterText = filterLabelMap[activeFilter] || "filtered dishes";
+        const searchText = searchTerm ? ` matching "${menuSearch?.value.trim() || ""}"` : "";
+        const sortText =
+          activeSort === "price-low"
+            ? "sorted by price low to high"
+            : activeSort === "price-high"
+              ? "sorted by price high to low"
+              : activeSort === "name-asc"
+                ? "sorted by name"
+                : "sorted by chef's picks";
+        menuFilterSummary.textContent = `Showing ${visibleCount} ${filterText}${searchText}, ${sortText}.`;
+      };
 
       const updateMenuVisibility = () => {
         let visibleCount = 0;
@@ -343,6 +396,8 @@ document.addEventListener("DOMContentLoaded", () => {
           if (isVisible) visibleCount += 1;
         });
 
+        sortMenuCards();
+
         if (menuVisibleCount) {
           menuVisibleCount.textContent = String(visibleCount);
         }
@@ -353,6 +408,7 @@ document.addEventListener("DOMContentLoaded", () => {
               : "No menu items matched your filters.";
           menuEmptyState.classList.toggle("d-none", visibleCount !== 0);
         }
+        updateFilterSummary(visibleCount);
       };
 
       const setActiveFilter = filter => {
@@ -375,6 +431,27 @@ document.addEventListener("DOMContentLoaded", () => {
         menuSearch.addEventListener("input", () => {
           searchTerm = normalizeText(menuSearch.value.trim());
           updateMenuVisibility();
+        });
+      }
+
+      if (menuSort) {
+        menuSort.addEventListener("change", () => {
+          activeSort = menuSort.value;
+          updateMenuVisibility();
+        });
+      }
+
+      if (menuResetFilters) {
+        menuResetFilters.addEventListener("click", () => {
+          if (menuSearch) {
+            menuSearch.value = "";
+            searchTerm = "";
+          }
+          if (menuSort) {
+            menuSort.value = "recommended";
+            activeSort = "recommended";
+          }
+          setActiveFilter("all");
         });
       }
 

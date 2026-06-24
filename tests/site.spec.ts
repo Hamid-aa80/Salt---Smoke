@@ -78,7 +78,7 @@ test("stays responsive on mobile and keeps navigation usable", async ({ page }) 
 
 test("filters menu items and keeps the page free of broken same-origin links", async ({ page }) => {
   await page.locator("#menu").scrollIntoViewIfNeeded();
-  await page.getByRole("button", { name: "Breakfast" }).click();
+  await page.locator('[data-menu-filter="breakfast"]').click();
   await expect(page.locator('[data-menu-name="English Breakfast"]')).toBeVisible();
   await expect(page.locator('[data-menu-name="Juicy Burger"]')).toBeHidden();
 
