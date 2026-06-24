@@ -178,6 +178,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const menuTitle = menuSection.querySelector("h1");
     const menuCards = Array.from(menuSection.querySelectorAll("[data-menu-item]"));
     const menuSearch = menuSection.querySelector("#menuSearch");
+    const menuCategoryFilters = menuSection.querySelector("#menuCategoryFilters");
+    const menuFilterStatus = menuSection.querySelector("#menuFilterStatus");
+    const menuResetFilters = menuSection.querySelector("#menuResetFilters");
     const menuVisibleCount = menuSection.querySelector("#menuVisibleCount");
     const menuTotalCount = menuSection.querySelector("#menuTotalCount");
     const menuEmptyState = menuSection.querySelector("#menuEmptyState");
@@ -193,11 +196,22 @@ document.addEventListener("DOMContentLoaded", () => {
         .toLowerCase()
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "");
+    const titleCase = value => value.charAt(0).toUpperCase() + value.slice(1);
+    const getMenuCardCategories = card =>
+      normalizeText(card.getAttribute("data-menu-category") || "")
+        .split(/\s+/)
+        .filter(Boolean);
 
     if (menuTotalCount) {
       menuTotalCount.textContent = String(menuCards.length);
     }
-    let searchTerm = menuSearch ? normalizeText(menuSearch.value.trim()) : "";
+    let searchQuery = menuSearch ? menuSearch.value.trim() : "";
+    let searchTerm = normalizeText(searchQuery);
+    let selectedCategory = "all";
+
+    const uniqueCategories = Array.from(
+      new Set(menuCards.flatMap(card => getMenuCardCategories(card)))
+    ).sort((left, right) => left.localeCompare(right));
 
     if (menuTitle && menuCards.length) {
       const daySeed = Math.floor(Date.now() / 86400000);
@@ -211,11 +225,69 @@ document.addEventListener("DOMContentLoaded", () => {
       menuTitle.insertAdjacentElement("afterend", spotlight);
     }
 
+    const updateFilterChipState = () => {
+      if (!menuCategoryFilters) return;
+
+      menuCategoryFilters.querySelectorAll("[data-menu-category-chip]").forEach(button => {
+        const isActive = button.getAttribute("data-menu-category-chip") === selectedCategory;
+        button.classList.toggle("is-active", isActive);
+        button.setAttribute("aria-pressed", isActive ? "true" : "false");
+      });
+    };
+
+    const updateFilterStatus = visibleCount => {
+      if (!menuFilterStatus) return;
+
+      const hasCategoryFilter = selectedCategory !== "all";
+      const hasSearchFilter = Boolean(searchQuery);
+      if (!hasCategoryFilter && !hasSearchFilter) {
+        menuFilterStatus.textContent = "Showing all categories.";
+        return;
+      }
+
+      const statusParts = [];
+      if (hasCategoryFilter) {
+        statusParts.push(`category: ${titleCase(selectedCategory)}`);
+      }
+      if (hasSearchFilter) {
+        statusParts.push(`search: "${searchQuery}"`);
+      }
+      menuFilterStatus.textContent = `Filtered by ${statusParts.join(" • ")} (${visibleCount} shown).`;
+    };
+
+    const renderCategoryFilterChips = () => {
+      if (!menuCategoryFilters) return;
+
+      const createFilterButton = (value, label) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "menu-filter-chip";
+        button.setAttribute("data-menu-category-chip", value);
+        button.setAttribute("aria-pressed", value === selectedCategory ? "true" : "false");
+        button.textContent = label;
+        button.addEventListener("click", () => {
+          selectedCategory = value;
+          updateMenuVisibility();
+        });
+        return button;
+      };
+
+      menuCategoryFilters.textContent = "";
+      menuCategoryFilters.appendChild(createFilterButton("all", "All"));
+      uniqueCategories.forEach(category => {
+        menuCategoryFilters.appendChild(createFilterButton(category, titleCase(category)));
+      });
+      updateFilterChipState();
+    };
+
     const updateMenuVisibility = () => {
       let visibleCount = 0;
       menuCards.forEach(card => {
         const menuName = normalizeText(getMenuCardName(card));
-        const isVisible = !searchTerm || menuName.includes(searchTerm);
+        const cardCategories = getMenuCardCategories(card);
+        const matchesSearch = !searchTerm || menuName.includes(searchTerm);
+        const matchesCategory = selectedCategory === "all" || cardCategories.includes(selectedCategory);
+        const isVisible = matchesSearch && matchesCategory;
         card.classList.toggle("d-none", !isVisible);
         if (isVisible) visibleCount += 1;
       });
@@ -223,16 +295,37 @@ document.addEventListener("DOMContentLoaded", () => {
       if (menuVisibleCount) {
         menuVisibleCount.textContent = String(visibleCount);
       }
+      updateFilterChipState();
+      updateFilterStatus(visibleCount);
 
       if (menuEmptyState) {
-        menuEmptyState.textContent = "No menu items matched your search.";
+        const filteredByCategory = selectedCategory !== "all";
+        menuEmptyState.textContent = filteredByCategory
+          ? `No ${titleCase(selectedCategory)} dishes matched your current filters.`
+          : "No menu items matched your search.";
         menuEmptyState.classList.toggle("d-none", visibleCount !== 0);
       }
     };
 
+    renderCategoryFilterChips();
+
     if (menuSearch) {
       menuSearch.addEventListener("input", () => {
-        searchTerm = normalizeText(menuSearch.value.trim());
+        searchQuery = menuSearch.value.trim();
+        searchTerm = normalizeText(searchQuery);
+        updateMenuVisibility();
+      });
+    }
+
+    if (menuResetFilters) {
+      menuResetFilters.addEventListener("click", () => {
+        selectedCategory = "all";
+        searchQuery = "";
+        searchTerm = "";
+        if (menuSearch) {
+          menuSearch.value = "";
+          menuSearch.focus();
+        }
         updateMenuVisibility();
       });
     }

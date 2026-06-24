@@ -178,7 +178,18 @@
                                 <div class="mb-4 text-start">
                                     <label class="form-label text-white-50 mb-2" for="menuSearch">Search the menu</label>
                                     <input id="menuSearch" type="search" class="form-control menu-search"
-                                        placeholder="Try burger, coffee, steak, or beer">
+                                        placeholder="Try burger, coffee, steak, or beer" aria-describedby="menuFilterStatus">
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+                                    <p class="text-white-50 mb-0">Filter by category</p>
+                                    <button id="menuResetFilters" type="button" class="btn btn-sm btn-outline-light">
+                                        Clear filters
+                                    </button>
+                                </div>
+                                <div id="menuCategoryFilters" class="menu-category-filters mb-3" role="group"
+                                    aria-label="Filter menu by category"></div>
+                                <p id="menuFilterStatus" class="text-white-50 small mb-3" aria-live="polite">
+                                    Showing all categories.
                                 </div>
                                 <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
                                     <p class="text-white-50 mb-0">

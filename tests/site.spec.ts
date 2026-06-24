@@ -178,6 +178,33 @@ test("searches menu items by name", async ({ page }) => {
   await expect(page.locator("#menuVisibleCount")).toHaveText("0");
 });
 
+test("filters menu items by category and can clear filters", async ({ page }) => {
+  await page.locator("#menu").scrollIntoViewIfNeeded();
+  const dinnerFilter = page.locator('#menuCategoryFilters button[data-menu-category-chip="dinner"]');
+  const allFilter = page.locator('#menuCategoryFilters button[data-menu-category-chip="all"]');
+  const menuSearch = page.locator("#menuSearch");
+  const resetFilters = page.locator("#menuResetFilters");
+  const menuFilterStatus = page.locator("#menuFilterStatus");
+
+  await dinnerFilter.click();
+  await expect(page.locator('[data-menu-name="Grilled Salmon"]')).toBeVisible();
+  await expect(page.locator('[data-menu-name="Smoked Steak"]')).toBeVisible();
+  await expect(page.locator('[data-menu-name="Juicy Burger"]')).toBeHidden();
+  await expect(menuFilterStatus).toContainText("category: Dinner");
+  await expect(page.locator("#menuVisibleCount")).toHaveText("2");
+
+  await menuSearch.fill("steak");
+  await expect(page.locator('[data-menu-name="Smoked Steak"]')).toBeVisible();
+  await expect(page.locator('[data-menu-name="Grilled Salmon"]')).toBeHidden();
+  await expect(menuFilterStatus).toContainText('search: "steak"');
+  await expect(page.locator("#menuVisibleCount")).toHaveText("1");
+
+  await resetFilters.click();
+  await expect(allFilter).toHaveClass(/is-active/);
+  await expect(menuFilterStatus).toContainText("Showing all categories.");
+  await expect(page.locator("#menuVisibleCount")).toHaveText("6");
+});
+
 test("keeps the page free of broken same-origin links", async ({ page }) => {
   await page.locator("#menu").scrollIntoViewIfNeeded();
   await expect(page.locator('[data-menu-name="English Breakfast"]')).toBeVisible();
