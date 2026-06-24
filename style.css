@@ -95,6 +95,25 @@ small,
     z-index: 99;
 }
 
+#reservationFeedback,
+#newsletterFeedback,
+#reservationConfirmation {
+    border: 0;
+    box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.15);
+}
+
+#reservationFeedback.alert-success,
+#newsletterFeedback.alert-success,
+#reservationConfirmation.alert-success {
+    color: #0f5132;
+}
+
+#reservationFeedback.alert-danger,
+#newsletterFeedback.alert-danger,
+#reservationConfirmation.alert-danger {
+    color: #842029;
+}
+
 .navbar-dark .navbar-nav .nav-link {
     position: relative;
     margin-left: 25px;

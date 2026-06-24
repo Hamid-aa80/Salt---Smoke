@@ -29,19 +29,23 @@ document.addEventListener("DOMContentLoaded", () => {
     element.classList.remove("d-none", "alert-success", "alert-danger", "alert-warning", "alert-info");
     element.classList.add("alert", `alert-${variant}`);
     element.setAttribute("role", "alert");
+    element.setAttribute("aria-atomic", "true");
     element.setAttribute("aria-live", variant === "danger" ? "assertive" : "polite");
     element.textContent = "";
 
-    const title = {
-      success: "Success",
-      danger: "Error",
-      warning: "Warning",
-      info: "Info"
+    const alertMeta = {
+      success: { title: "Success", icon: "fa-circle-check" },
+      danger: { title: "Error", icon: "fa-triangle-exclamation" },
+      warning: { title: "Warning", icon: "fa-circle-exclamation" },
+      info: { title: "Info", icon: "fa-circle-info" }
     }[variant];
 
-    if (title) {
+    if (alertMeta) {
       const heading = document.createElement("strong");
-      heading.textContent = `${title}: `;
+      const icon = document.createElement("i");
+      icon.className = `fa-solid ${alertMeta.icon} me-2`;
+      heading.appendChild(icon);
+      heading.appendChild(document.createTextNode(`${alertMeta.title}: `));
       element.appendChild(heading);
     }
 
@@ -267,7 +271,7 @@ document.addEventListener("DOMContentLoaded", () => {
           showAlertMessage(
             newsletterFeedback,
             "danger",
-            "Please enter a valid email address to subscribe."
+            "Please enter a valid email address so we can send your newsletter updates."
           );
           return;
         }
@@ -277,7 +281,7 @@ document.addEventListener("DOMContentLoaded", () => {
         showAlertMessage(
           newsletterFeedback,
           "success",
-          `Thanks for subscribing, ${email}. We'll keep you updated with offers and news.`
+          `You're subscribed with ${email}. We'll send offers, news, and menu updates to this inbox.`
         );
       };
 
@@ -315,14 +319,14 @@ document.addEventListener("DOMContentLoaded", () => {
         summaryParts.length
           ? `Your reservation request for ${summaryParts.join(
               " • "
-            )} has been received. We'll be in touch shortly to confirm the details.`
-          : "Your reservation request has been received. We'll be in touch shortly to confirm the details."
+            )} has been received. We'll contact you shortly to confirm the details.`
+          : "Your reservation request has been received. We'll contact you shortly to confirm the details."
       );
     } else {
       showAlertMessage(
         reservationConfirmation,
         "danger",
-        "We couldn't find your reservation details. Please go back and submit the form again."
+        "We couldn't find your reservation details. Please return to the form and submit it again."
       );
     }
   }
@@ -440,7 +444,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!isValidName(name)) {
       nameInput.setCustomValidity("Please enter a valid full name.");
       nameInput.reportValidity();
-      showAlertMessage(reservationFeedback, "danger", "Please enter a valid full name.");
+      showAlertMessage(
+        reservationFeedback,
+        "danger",
+        "Please enter your full name so we can confirm the booking."
+      );
       nameInput.focus();
       return false;
     }
@@ -449,7 +457,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!isValidEmail(email)) {
       emailInput.setCustomValidity("Please enter a valid email address.");
       emailInput.reportValidity();
-      showAlertMessage(reservationFeedback, "danger", "Please enter a valid email address.");
+      showAlertMessage(
+        reservationFeedback,
+        "danger",
+        "Please enter a valid email address so we can send your confirmation."
+      );
       emailInput.focus();
       return false;
     }
@@ -458,7 +470,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!date) {
       dateInput.setCustomValidity("Please choose a reservation date.");
       dateInput.reportValidity();
-      showAlertMessage(reservationFeedback, "danger", "Please choose a reservation date.");
+      showAlertMessage(reservationFeedback, "danger", "Please choose a reservation date to continue.");
       dateInput.focus();
       return false;
     }
@@ -466,7 +478,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!isValidDate(date)) {
       dateInput.setCustomValidity("Reservation date cannot be in the past.");
       dateInput.reportValidity();
-      showAlertMessage(reservationFeedback, "danger", "Reservation date cannot be in the past.");
+      showAlertMessage(
+        reservationFeedback,
+        "danger",
+        "Your reservation date must be today or later."
+      );
       dateInput.focus();
       return false;
     }
@@ -475,7 +491,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!isValidGuestNumber(guests)) {
       peopleSelect.setCustomValidity("Please select the number of guests.");
       peopleSelect.reportValidity();
-      showAlertMessage(reservationFeedback, "danger", "Please select the number of guests.");
+      showAlertMessage(reservationFeedback, "danger", "Please select how many guests are coming.");
       peopleSelect.focus();
       return false;
     }
@@ -487,7 +503,7 @@ document.addEventListener("DOMContentLoaded", () => {
       showAlertMessage(
         reservationFeedback,
         "danger",
-        "Please enter at least 5 characters for your special request."
+        "Please add at least 5 characters to your special request."
       );
       messageInput.focus();
       return false;
