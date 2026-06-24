@@ -182,6 +182,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const menuVisibleCount = menuSection.querySelector("#menuVisibleCount");
     const menuTotalCount = menuSection.querySelector("#menuTotalCount");
     const menuEmptyState = menuSection.querySelector("#menuEmptyState");
+    const menuFilterGroup = menuSection.querySelector(".menu-filter-group");
+    const menuStatusRow = menuSection.querySelector(".d-flex.justify-content-between");
+    const menuFavouritesStorageKey = "salt-smoke-menu-favourites";
 
     const getMenuCardName = card =>
       card.getAttribute("data-menu-name") ||
@@ -194,6 +197,46 @@ document.addEventListener("DOMContentLoaded", () => {
         .toLowerCase()
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "");
+    const readFavouriteMenuItems = () => {
+      const storedItems = localStorage.getItem(menuFavouritesStorageKey);
+      if (!storedItems) return new Set();
+
+      try {
+        const parsedItems = JSON.parse(storedItems);
+        if (!Array.isArray(parsedItems)) {
+          localStorage.removeItem(menuFavouritesStorageKey);
+          return new Set();
+        }
+
+        return new Set(
+          parsedItems
+            .filter(item => typeof item === "string")
+            .map(item => item.trim())
+            .filter(Boolean)
+        );
+      } catch (error) {
+        localStorage.removeItem(menuFavouritesStorageKey);
+        return new Set();
+      }
+    };
+    const favouriteMenuItems = readFavouriteMenuItems();
+    const writeFavouriteMenuItems = () => {
+      if (!favouriteMenuItems.size) {
+        localStorage.removeItem(menuFavouritesStorageKey);
+        return;
+      }
+
+      localStorage.setItem(menuFavouritesStorageKey, JSON.stringify([...favouriteMenuItems].sort()));
+    };
+    const isFavouriteMenuItem = card => favouriteMenuItems.has(getMenuCardName(card));
+    const favouriteSummary = document.createElement("p");
+    favouriteSummary.className = "text-primary mb-0 fw-semibold";
+    favouriteSummary.setAttribute("aria-live", "polite");
+    favouriteSummary.setAttribute("aria-atomic", "true");
+
+    if (menuStatusRow) {
+      menuStatusRow.appendChild(favouriteSummary);
+    }
 
     if (menuTotalCount) {
       menuTotalCount.textContent = String(menuCards.length);
@@ -211,21 +254,90 @@ document.addEventListener("DOMContentLoaded", () => {
       menuTitle.insertAdjacentElement("afterend", spotlight);
     }
 
+    const updateFavouriteSummary = favouritesFilterButton => {
+      const totalFavourites = favouriteMenuItems.size;
+      favouriteSummary.textContent = totalFavourites
+        ? `${totalFavourites} favourite dish${totalFavourites === 1 ? "" : "es"} saved`
+        : "Save favourites to build your shortlist.";
+
+      if (favouritesFilterButton) {
+        favouritesFilterButton.disabled = totalFavourites === 0;
+        favouritesFilterButton.textContent = totalFavourites
+          ? `Favourites (${totalFavourites})`
+          : "Favourites";
+      }
+    };
+
+    const updateFavouriteButtonState = (button, card) => {
+      const cardName = getMenuCardName(card);
+      const isFavourite = favouriteMenuItems.has(cardName);
+      button.className = `btn btn-sm ${isFavourite ? "btn-primary" : "btn-outline-primary"}`;
+      button.setAttribute("aria-pressed", String(isFavourite));
+      button.setAttribute(
+        "aria-label",
+        `${isFavourite ? "Remove" : "Save"} ${cardName} ${isFavourite ? "from" : "to"} favourites`
+      );
+      button.title = isFavourite ? `Remove ${cardName} from favourites` : `Save ${cardName} to favourites`;
+      button.innerHTML = `<i class="fa-${isFavourite ? "solid" : "regular"} fa-heart me-1"></i>${isFavourite ? "Saved" : "Save"}`;
+    };
+
+    menuCards.forEach(card => {
+      const menuCard = card.querySelector(".menu-card");
+      if (!menuCard) return;
+
+      menuCard.classList.add("position-relative");
+
+      const favouriteButton = document.createElement("button");
+      favouriteButton.type = "button";
+      favouriteButton.style.position = "absolute";
+      favouriteButton.style.top = "0.75rem";
+      favouriteButton.style.right = "0.75rem";
+      favouriteButton.style.zIndex = "1";
+      updateFavouriteButtonState(favouriteButton, card);
+
+      favouriteButton.addEventListener("click", () => {
+        const cardName = getMenuCardName(card);
+        if (favouriteMenuItems.has(cardName)) {
+          favouriteMenuItems.delete(cardName);
+        } else {
+          favouriteMenuItems.add(cardName);
+        }
+
+        writeFavouriteMenuItems();
+        updateFavouriteButtonState(favouriteButton, card);
+        menuSection.dispatchEvent(new CustomEvent("menu:favourites-updated"));
+      });
+
+      menuCard.appendChild(favouriteButton);
+    });
+
     if (menuCards.length && filterButtons.length) {
       let activeFilter = "all";
       let searchTerm = menuSearch ? normalizeText(menuSearch.value.trim()) : "";
+      let favouritesFilterButton = null;
+
+      if (menuFilterGroup) {
+        favouritesFilterButton = document.createElement("button");
+        favouritesFilterButton.type = "button";
+        favouritesFilterButton.className = "btn btn-outline-primary";
+        favouritesFilterButton.dataset.menuFilter = "favorites";
+        favouritesFilterButton.setAttribute("aria-pressed", "false");
+        menuFilterGroup.appendChild(favouritesFilterButton);
+        filterButtons.push(favouritesFilterButton);
+      }
 
       const updateMenuVisibility = () => {
         let visibleCount = 0;
-
         menuCards.forEach(card => {
           const categories = (card.getAttribute("data-menu-category") || "")
             .split(/\s+/)
             .filter(Boolean);
           const menuName = normalizeText(getMenuCardName(card));
-          const matchesFilter = activeFilter === "all" || categories.includes(activeFilter);
+          const matchesFilter =
+            activeFilter === "all" || activeFilter === "favorites" || categories.includes(activeFilter);
+          const matchesFavourite = activeFilter !== "favorites" || isFavouriteMenuItem(card);
           const matchesSearch = !searchTerm || menuName.includes(searchTerm);
-          const isVisible = matchesFilter && matchesSearch;
+          const isVisible = matchesFilter && matchesFavourite && matchesSearch;
 
           card.classList.toggle("d-none", !isVisible);
           if (isVisible) visibleCount += 1;
@@ -235,6 +347,10 @@ document.addEventListener("DOMContentLoaded", () => {
           menuVisibleCount.textContent = String(visibleCount);
         }
         if (menuEmptyState) {
+          menuEmptyState.textContent =
+            activeFilter === "favorites"
+              ? "No favourite dishes matched your current search."
+              : "No menu items matched your filters.";
           menuEmptyState.classList.toggle("d-none", visibleCount !== 0);
         }
       };
@@ -262,6 +378,21 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       }
 
+      menuSection.addEventListener("menu:favourites-updated", () => {
+        menuCards.forEach(card => {
+          const favouriteButton = card.querySelector(".menu-card button[type=\"button\"]");
+          if (favouriteButton) {
+            updateFavouriteButtonState(favouriteButton, card);
+          }
+        });
+
+        updateFavouriteSummary(favouritesFilterButton);
+        if (activeFilter === "favorites") {
+          updateMenuVisibility();
+        }
+      });
+
+      updateFavouriteSummary(favouritesFilterButton);
       setActiveFilter("all");
     }
   }
@@ -485,6 +616,7 @@ document.addEventListener("DOMContentLoaded", () => {
       message: messageInput ? messageInput.value.trim() : ""
     };
     localStorage.setItem(storageKey, JSON.stringify(draft));
+    updateDraftStatus(formatTime(new Date()));
   };
 
   const existingDraft = readDraft();
@@ -509,6 +641,38 @@ document.addEventListener("DOMContentLoaded", () => {
     bookingButtonRow.appendChild(reservationSummary);
   }
 
+  const draftStatus = document.createElement("p");
+  draftStatus.className = "text-white-50 small mt-2 mb-0";
+  draftStatus.setAttribute("aria-live", "polite");
+  draftStatus.setAttribute("aria-atomic", "true");
+  if (bookingButtonRow) {
+    bookingButtonRow.appendChild(draftStatus);
+  }
+
+  const messageHint = document.createElement("p");
+  messageHint.className = "text-white-50 small mt-2 mb-0";
+  messageHint.id = "reservationMessageHint";
+  messageHint.setAttribute("aria-live", "polite");
+  messageHint.setAttribute("aria-atomic", "true");
+  if (messageInput) {
+    messageInput.insertAdjacentElement("afterend", messageHint);
+    messageInput.setAttribute("aria-describedby", messageHint.id);
+  }
+
+  const suggestedSlotsHeading = document.createElement("p");
+  suggestedSlotsHeading.className = "text-white-50 small mt-3 mb-2";
+  suggestedSlotsHeading.textContent = "Suggested seating times";
+
+  const suggestedSlotsRow = document.createElement("div");
+  suggestedSlotsRow.className = "d-flex flex-wrap gap-2";
+  suggestedSlotsRow.setAttribute("aria-live", "polite");
+  suggestedSlotsRow.setAttribute("aria-atomic", "true");
+
+  if (bookingButtonRow) {
+    bookingButtonRow.appendChild(suggestedSlotsHeading);
+    bookingButtonRow.appendChild(suggestedSlotsRow);
+  }
+
   const updateReservationSummary = () => {
     if (!bookingButtonRow) return;
     const name = nameInput ? nameInput.value.trim() : "";
@@ -523,6 +687,86 @@ document.addEventListener("DOMContentLoaded", () => {
     reservationSummary.textContent = details.length
       ? `Reservation preview: ${details.join(" • ")}`
       : "Fill in your details to preview your reservation.";
+  };
+
+  const updateRequestHint = () => {
+    if (!messageInput) return;
+    const requestLength = messageInput.value.trim().length;
+    const remainingCharacters = Math.max(0, 5 - requestLength);
+    messageHint.textContent = remainingCharacters
+      ? `${requestLength} characters entered (${remainingCharacters} more needed).`
+      : `${requestLength} characters entered. Great detail for your request.`;
+  };
+
+  const formatTime = date => {
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    return `${hours}:${minutes}`;
+  };
+
+  const getSuggestedSlots = (dateValue, guestsValue) => {
+    if (!dateValue || !guestsValue) return [];
+
+    const reservationDate = new Date(`${dateValue}T00:00:00`);
+    if (Number.isNaN(reservationDate.getTime())) return [];
+
+    const day = reservationDate.getDay();
+    const isWeekend = day === 0 || day === 6;
+    const baseSlots = isWeekend
+      ? ["10:30", "12:00", "14:00", "18:00", "20:30", "22:00"]
+      : ["12:00", "13:30", "15:00", "18:00", "19:30", "21:00"];
+    const slotStepMinutes = guestsValue === "4" ? 120 : guestsValue === "3" ? 90 : 60;
+
+    const slots = baseSlots.map(slot => {
+      const [hours, minutes] = slot.split(":").map(Number);
+      const slotDate = new Date(`${dateValue}T00:00:00`);
+      slotDate.setHours(hours, minutes, 0, 0);
+      return slotDate;
+    });
+
+    const todayDate = new Date();
+    const isSameDay = todayDate.toISOString().split("T")[0] === dateValue;
+    const leadTimeThreshold = new Date(todayDate.getTime() + 60 * 60 * 1000);
+
+    return slots
+      .filter(slotDate => !isSameDay || slotDate >= leadTimeThreshold)
+      .filter(slotDate => slotDate.getHours() >= 10 && slotDate.getHours() <= 22)
+      .filter((_, index) => index % 2 === 0 || slotStepMinutes <= 90)
+      .slice(0, 3)
+      .map(formatTime);
+  };
+
+  const updateSuggestedSlots = () => {
+    if (!bookingButtonRow) return;
+    suggestedSlotsRow.textContent = "";
+
+    const date = dateInput ? dateInput.value : "";
+    const guests = peopleSelect ? peopleSelect.value : "";
+    const suggestedSlots = getSuggestedSlots(date, guests);
+
+    if (!suggestedSlots.length) {
+      suggestedSlotsHeading.textContent = "Suggested seating times";
+      const helpText = document.createElement("span");
+      helpText.className = "badge bg-secondary";
+      helpText.textContent = "Pick date and guests to see time suggestions";
+      suggestedSlotsRow.appendChild(helpText);
+      return;
+    }
+
+    suggestedSlotsHeading.textContent = "Suggested seating times for your booking";
+    suggestedSlots.forEach(slot => {
+      const badge = document.createElement("span");
+      badge.className = "badge bg-primary";
+      badge.textContent = slot;
+      suggestedSlotsRow.appendChild(badge);
+    });
+  };
+
+  const updateDraftStatus = timestamp => {
+    if (!bookingButtonRow) return;
+    draftStatus.textContent = timestamp
+      ? `Draft saved at ${timestamp}`
+      : "Your reservation details are saved as you type.";
   };
 
   const namePattern = /^[A-Za-z][A-Za-z\s'-]{1,}$/;
@@ -672,12 +916,24 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   updateReservationSummary();
+  updateRequestHint();
+  updateSuggestedSlots();
+  updateDraftStatus(null);
   updateSubmitButtonState();
   [nameInput, dateInput, peopleSelect].forEach(field => {
     if (!field) return;
     field.addEventListener("input", updateReservationSummary);
     field.addEventListener("change", updateReservationSummary);
   });
+  [dateInput, peopleSelect].forEach(field => {
+    if (!field) return;
+    field.addEventListener("input", updateSuggestedSlots);
+    field.addEventListener("change", updateSuggestedSlots);
+  });
+  if (messageInput) {
+    messageInput.addEventListener("input", updateRequestHint);
+    messageInput.addEventListener("change", updateRequestHint);
+  }
   [nameInput, emailInput, dateInput, peopleSelect, messageInput].forEach(field => {
     if (!field) return;
     field.addEventListener("input", () => clearFieldValidity(field));
