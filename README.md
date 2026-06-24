@@ -457,6 +457,37 @@ The Lighthouse audit ensures optimal user experience on all devices and connecti
 
 ## 🌍 Deployment
 
+### Architecture Overview
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     GitHub Pages                             │
+│              (Frontend - Static Hosting)                      │
+│         https://hamid-aa80.github.io/Salt---Smoke/           │
+│                                                              │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐       │
+│  │   index.html │  │  style.css   │  │   main.js    │       │
+│  └──────────────┘  └──────────────┘  └──────────────┘       │
+└────────────────────────────┬──────────────────────────────────┘
+                             │ API Calls
+                             ↓
+┌─────────────────────────────────────────────────────────────┐
+│                  Cloud Hosting (Railway/Heroku)              │
+│              (Backend API - Node.js/Express)                 │
+│                                                              │
+│  ┌────────────────────────────────────────────────────┐    │
+│  │         Express Server (Port 5000)                 │    │
+│  │  /api/health  /api/reservations  /api/menu        │    │
+│  │  /api/newsletter  /api/*                           │    │
+│  └────────────────┬─────────────────────────────────┘    │
+│                   │ Database Operations                    │
+│  ┌────────────────↓─────────────────────────────────┐    │
+│  │          SQLite Database (database.db)            │    │
+│  │  - Reservations - Newsletter - Menu Items         │    │
+│  └────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────┘
+```
+
 ### Frontend Deployment (GitHub Pages)
 
 The frontend is automatically deployed to GitHub Pages from the `main` branch:
@@ -464,9 +495,97 @@ The frontend is automatically deployed to GitHub Pages from the `main` branch:
 https://hamid-aa80.github.io/Salt---Smoke/
 ```
 
-To deploy:
+**Deployment Process:**
 1. Push changes to the `main` branch
-2. GitHub Pages automatically rebuilds and deploys
+2. GitHub Actions workflow triggers automatically
+3. GitHub Pages rebuilds and deploys the frontend
+4. Live website updates within seconds
+
+### Backend Deployment Options
+
+The backend API can be deployed to multiple platforms:
+
+#### ✅ Quick Start Platforms (Recommended)
+
+| Platform | Setup Time | Cost | Best For |
+|----------|-----------|------|----------|
+| **Railway** | 2 min | Free tier | Beginners, quick deployment |
+| **Render** | 3 min | Free tier | GitHub integration, ease of use |
+| **Heroku** | 5 min | $7+/month | Reliability, large apps |
+
+#### 🔧 Manual Deployment Platforms
+
+| Platform | Setup Time | Cost | Best For |
+|----------|-----------|------|----------|
+| **AWS Lightsail** | 15 min | $3.50+/month | Scalability, performance |
+| **DigitalOcean** | 15 min | $4+/month | Simplicity, VPS control |
+
+### Quick Deploy Steps
+
+#### Option 1: Railway (Easiest)
+```bash
+1. Go to https://railway.app
+2. Sign up with GitHub
+3. Click "New Project" → "Deploy from GitHub"
+4. Select this repository
+5. Railway auto-deploys your API!
+```
+
+#### Option 2: Render
+```bash
+1. Go to https://render.com
+2. Sign up with GitHub
+3. Click "New +" → "Web Service"
+4. Connect this repository
+5. Set Start Command: npm start
+6. Deploy!
+```
+
+#### Option 3: Heroku
+```bash
+# Install Heroku CLI
+brew install heroku
+heroku login
+
+# Create app
+heroku create your-salt-smoke-api
+
+# Deploy
+git push heroku main
+
+# View logs
+heroku logs --tail
+```
+
+### Environment Variables
+
+Set these in your deployment platform's dashboard:
+```env
+PORT=5000
+NODE_ENV=production
+DATABASE_PATH=./database.db
+```
+
+### Post-Deployment
+
+After deploying the API:
+
+1. **Get your API URL** from the deployment platform
+2. **Update Frontend** - Configure the frontend to use your API:
+   ```javascript
+   // In main.js
+   const API_URL = 'https://your-deployed-api.com/api';
+   ```
+3. **Test API Health**
+   ```bash
+   curl https://your-deployed-api.com/api/health
+   ```
+4. **Verify All Features** - Test reservations, newsletter, and menu endpoints
+
+### Full Deployment Guide
+
+For comprehensive deployment instructions, platform-specific guides, and troubleshooting:
+📖 See [**DEPLOYMENT.md**](./DEPLOYMENT.md)
 
 
 ---
