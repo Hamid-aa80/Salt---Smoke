@@ -119,7 +119,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const dateInput = reservationForm.querySelector("#datetime");
   const peopleSelect = reservationForm.querySelector("#select1");
   const messageInput = reservationForm.querySelector("#message");
-  const bookingLink = reservationForm.querySelector('a[href="submit.html"]');
+  const submitButton = reservationForm.querySelector('button[type="submit"], input[type="submit"]');
 
   const storageKey = "salt-smoke-reservation-draft";
   const today = new Date().toISOString().split("T")[0];
@@ -165,7 +165,7 @@ document.addEventListener("DOMContentLoaded", () => {
     field.addEventListener("change", saveDraft);
   });
 
-  const bookingButtonRow = bookingLink ? bookingLink.closest(".col-12") : null;
+  const bookingButtonRow = submitButton ? submitButton.closest(".col-12") : null;
   const reservationSummary = document.createElement("p");
   reservationSummary.className = "text-white-50 small mt-3 mb-0";
   if (bookingButtonRow) {
@@ -189,7 +189,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const validateReservationForm = () => {
-    if (!nameInput || !emailInput || !dateInput || !bookingLink) return false;
+    if (!nameInput || !emailInput || !dateInput) return false;
 
     const name = nameInput.value.trim();
     const email = emailInput.value.trim();
@@ -229,20 +229,51 @@ document.addEventListener("DOMContentLoaded", () => {
     return true;
   };
 
-  if (bookingLink) {
-    bookingLink.addEventListener("click", event => {
-      event.preventDefault();
-      if (!validateReservationForm()) return;
+  const isReservationFormReady = () => {
+    if (!nameInput || !emailInput || !dateInput) return false;
 
-      saveDraft();
-      window.location.href = bookingLink.getAttribute("href");
-    });
-  }
+    const name = nameInput.value.trim();
+    const email = emailInput.value.trim();
+    const date = dateInput.value;
+
+    return (
+      name.length >= 2 &&
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) &&
+      Boolean(date) &&
+      date >= today
+    );
+  };
+
+  const updateSubmitButtonState = () => {
+    if (!submitButton) return;
+    submitButton.disabled = !isReservationFormReady();
+  };
+
+  reservationForm.addEventListener("submit", event => {
+    if (!submitButton) {
+      event.preventDefault();
+      return;
+    }
+
+    if (!validateReservationForm()) {
+      event.preventDefault();
+      return;
+    }
+
+    dateInput.setCustomValidity("");
+    saveDraft();
+  });
 
   updateReservationSummary();
+  updateSubmitButtonState();
   [nameInput, dateInput, peopleSelect].forEach(field => {
     if (!field) return;
     field.addEventListener("input", updateReservationSummary);
     field.addEventListener("change", updateReservationSummary);
+  });
+  [nameInput, emailInput, dateInput].forEach(field => {
+    if (!field) return;
+    field.addEventListener("input", updateSubmitButtonState);
+    field.addEventListener("change", updateSubmitButtonState);
   });
 });
