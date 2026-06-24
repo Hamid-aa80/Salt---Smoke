@@ -176,55 +176,47 @@
                             <a class="btn btn-primary py-3 w-100" href="#team">Read More</a>
                         </div>
                     </div>
-                    <div class=" container--xx1 py-5" id="menu">
+                    <div class="container-xxl py-5" id="menu">
                         <div class="container">
                             <div class="text-center wow fadeInUp">
                                 <h5 class="section-title ff-secondary text-center text-primary fw-normal">Menu</h5>
                                 <h1 class="mb-5">Most Popular Items</h1>
                             </div>
                             <div class="tab-class text-center wow fadeInUp" data-wow-delay="0.1s">
-                                <ul class="nav nav-pills d-inline-flex justify-content-center border-bottom mb-5">
-                                    <li class="nav-item">
-                                        <a class="d-flex align-items-center text-start mx-3 pb-3 ">
-                                            <i class="fa-solid fa-hamburger fa-2x text-primary"></i>
-                                            <div class="ps-3">
-                                                <h6 class="mt-n1 mb-0">Lunch</h6>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="d-flex align-items-center">
-                                            <i class="fa-solid fa-utensils fa-2x text-primary"></i>
-                                            <div class="ps-3">
-                                                <h6 class="mt-n1 mb-0">Dinner</h6>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="d-flex align-items-center  mx-3 pb-3  ">
-                                            <i class="fa-solid fa-coffee fa-2x text-primary"></i>
-                                            <div class="ps-3">
-                                                <h6 class="mt-n1 mb-0">Breakfast</h6>
-                                            </div>
-                                        </a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="d-flex align-items-center text-start mx-3 pb-3 ">
-                                            <i class="fa-solid fa-beer fa-2x text-primary"></i>
-                                            <div class="ps-3">
-
-                                                <h6 class="mt-n1 mb-0">Drinks</h6>
-                                            </div>
-                                        </a>
-                                    </li>
-                                </ul>
-                                <div class="tab-content">
+                                <div class="menu-filters d-flex flex-column flex-lg-row gap-3 justify-content-between align-items-lg-end mb-4">
+                                    <div class="flex-grow-1 text-start">
+                                        <label class="form-label text-white-50 mb-2" for="menuSearch">Search the menu</label>
+                                        <input id="menuSearch" type="search" class="form-control menu-search"
+                                            placeholder="Try burger, coffee, steak, or beer">
+                                    </div>
+                                    <div class="menu-filter-group d-flex flex-wrap gap-2" role="group"
+                                        aria-label="Filter menu items">
+                                        <button type="button" class="btn btn-outline-primary active"
+                                            data-menu-filter="all" aria-pressed="true">All</button>
+                                        <button type="button" class="btn btn-outline-primary"
+                                            data-menu-filter="breakfast" aria-pressed="false">Breakfast</button>
+                                        <button type="button" class="btn btn-outline-primary"
+                                            data-menu-filter="lunch" aria-pressed="false">Lunch</button>
+                                        <button type="button" class="btn btn-outline-primary"
+                                            data-menu-filter="dinner" aria-pressed="false">Dinner</button>
+                                        <button type="button" class="btn btn-outline-primary"
+                                            data-menu-filter="drinks" aria-pressed="false">Drinks</button>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+                                    <p class="text-white-50 mb-0">
+                                        Showing <span id="menuVisibleCount">6</span> of <span id="menuTotalCount">6</span>
+                                        dishes
+                                    </p>
+                                </div>
+                                <div id="menuResults" class="tab-content">
                                     <div id="tab-1" class="tab-pane fade show p-0 active">
                                         <div class="row g-4">
-                                            <div class="col-lg-6">
-                                                <div class="d-flex align-items-center">
+                                            <div class="col-lg-6" data-menu-item data-menu-category="lunch"
+                                                data-menu-name="Juicy Burger">
+                                                <div class="d-flex align-items-center menu-card">
                                                     <img class="flex-shrink-0 img-fluid rounded"
-                                                        src="assets/img/menu-1.jpg" alt=" Menu Image"
+                                                        src="assets/img/menu-1.jpg" alt="Juicy Burger"
                                                         style="width: 100px; height: 100px; object-fit: cover;">
                                                     <div class="w-100 d-flex flex-column text-start ps-4">
                                                         <h5 class="d-flex justify-content-between border-bottom pb-2">
@@ -237,10 +229,11 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-6">
-                                                <div class="d-flex align-items-center">
+                                            <div class="col-lg-6" data-menu-item data-menu-category="dinner"
+                                                data-menu-name="Grilled Salmon">
+                                                <div class="d-flex align-items-center menu-card">
                                                     <img class="flex-shrink-0 img-fluid rounded"
-                                                        src="assets/img/menu-2.jpg" alt=" Menu Image"
+                                                        src="assets/img/menu-2.jpg" alt="Grilled Salmon"
                                                         style="width: 100px; height: 100px; object-fit: cover;">
                                                     <div class="w-100 d-flex flex-column text-start ps-4">
                                                         <h5 class="d-flex justify-content-between border-bottom pb-2">
@@ -254,10 +247,11 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-lg-6">
-                                                <div class="d-flex align-items-center">
+                                            <div class="col-lg-6" data-menu-item data-menu-category="dinner"
+                                                data-menu-name="Smoked Steak">
+                                                <div class="d-flex align-items-center menu-card">
                                                     <img class="flex-shrink-0 img-fluid rounded"
-                                                        src="assets/img/menu-3.jpg" alt=" Menu Image"
+                                                        src="assets/img/menu-3.jpg" alt="Smoked Steak"
                                                         style="width: 100px; height: 100px; object-fit: cover;">
                                                     <div class="w-100 d-flex flex-column text-start ps-4">
                                                         <h5 class="d-flex justify-content-between border-bottom pb-2">
@@ -270,10 +264,11 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-6">
-                                                <div class="d-flex align-items-center">
+                                            <div class="col-lg-6" data-menu-item data-menu-category="breakfast"
+                                                data-menu-name="English Breakfast">
+                                                <div class="d-flex align-items-center menu-card">
                                                     <img class="flex-shrink-0 img-fluid rounded"
-                                                        src="assets/img/menu-4.jpg" alt=" Menu Image"
+                                                        src="assets/img/menu-4.jpg" alt="English Breakfast"
                                                         style="width: 100px; height: 100px; object-fit: cover;">
                                                     <div class="w-100 d-flex flex-column text-start ps-4">
                                                         <h5 class="d-flex justify-content-between border-bottom pb-2">
@@ -285,10 +280,11 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-6">
-                                                <div class="d-flex align-items-center">
+                                            <div class="col-lg-6" data-menu-item data-menu-category="drinks"
+                                                data-menu-name="Beer">
+                                                <div class="d-flex align-items-center menu-card">
                                                     <img class="flex-shrink-0 img-fluid rounded"
-                                                        src="assets/img/menu-5.jpg" alt=" Menu Image"
+                                                        src="assets/img/menu-5.jpg" alt="Beer"
                                                         style="width: 100px; height: 100px; object-fit: cover;">
                                                     <div class="w-100 d-flex flex-column text-start ps-4">
                                                         <h5 class="d-flex justify-content-between border-bottom pb-2">
@@ -300,10 +296,11 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-6">
-                                                <div class="d-flex align-items-center">
+                                            <div class="col-lg-6" data-menu-item data-menu-category="breakfast drinks"
+                                                data-menu-name="Coffee">
+                                                <div class="d-flex align-items-center menu-card">
                                                     <img class="flex-shrink-0 img-fluid rounded"
-                                                        src="assets/img/menu-6.jpg" alt=" Menu Image"
+                                                        src="assets/img/menu-6.jpg" alt="Coffee"
                                                         style="width: 100px; height: 100px; object-fit: cover;">
                                                     <div class="w-100 d-flex flex-column text-start ps-4">
                                                         <h5 class="d-flex justify-content-between border-bottom pb-2">
@@ -319,6 +316,9 @@
                                         </div>
                                     </div>
                                 </div>
+                                <p id="menuEmptyState" class="text-warning mt-4 mb-0 d-none">
+                                    No menu items matched your filters.
+                                </p>
                             </div>
                         </div>
                     </div>

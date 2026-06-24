@@ -176,23 +176,93 @@ document.addEventListener("DOMContentLoaded", () => {
   const menuSection = document.getElementById("menu");
   if (menuSection) {
     const menuTitle = menuSection.querySelector("h1");
-    const menuItems = Array.from(
-      menuSection.querySelectorAll("#tab-1 h5.d-flex.justify-content-between span:first-child")
-    );
-    const menuPrices = Array.from(
-      menuSection.querySelectorAll("#tab-1 h5.d-flex.justify-content-between span.text-primary")
-    );
+    const menuCards = Array.from(menuSection.querySelectorAll("[data-menu-item]"));
+    const filterButtons = Array.from(menuSection.querySelectorAll("[data-menu-filter]"));
+    const menuSearch = menuSection.querySelector("#menuSearch");
+    const menuVisibleCount = menuSection.querySelector("#menuVisibleCount");
+    const menuTotalCount = menuSection.querySelector("#menuTotalCount");
+    const menuEmptyState = menuSection.querySelector("#menuEmptyState");
 
-    if (menuTitle && menuItems.length && menuItems.length === menuPrices.length) {
+    const getMenuCardName = card =>
+      card.getAttribute("data-menu-name") ||
+      card.querySelector("h5 span:first-child")?.textContent.trim() ||
+      "";
+    const getMenuCardPrice = card =>
+      card.querySelector(".text-primary")?.textContent.trim() || "";
+    const normalizeText = value =>
+      value
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+
+    if (menuTotalCount) {
+      menuTotalCount.textContent = String(menuCards.length);
+    }
+
+    if (menuTitle && menuCards.length) {
       const daySeed = Math.floor(Date.now() / 86400000);
-      const dailyIndex = daySeed % menuItems.length;
-      const dailyDish = menuItems[dailyIndex].textContent.trim();
-      const dailyPrice = menuPrices[dailyIndex].textContent.trim();
+      const dailyIndex = daySeed % menuCards.length;
+      const dailyDish = getMenuCardName(menuCards[dailyIndex]);
+      const dailyPrice = getMenuCardPrice(menuCards[dailyIndex]);
 
       const spotlight = document.createElement("p");
       spotlight.className = "text-center text-white mt-3 mb-4";
       spotlight.innerHTML = `Chef's pick today: <strong>${dailyDish}</strong> <span class="text-primary">${dailyPrice}</span>`;
       menuTitle.insertAdjacentElement("afterend", spotlight);
+    }
+
+    if (menuCards.length && filterButtons.length) {
+      let activeFilter = "all";
+      let searchTerm = menuSearch ? normalizeText(menuSearch.value.trim()) : "";
+
+      const updateMenuVisibility = () => {
+        let visibleCount = 0;
+
+        menuCards.forEach(card => {
+          const categories = (card.getAttribute("data-menu-category") || "")
+            .split(/\s+/)
+            .filter(Boolean);
+          const menuName = normalizeText(getMenuCardName(card));
+          const matchesFilter = activeFilter === "all" || categories.includes(activeFilter);
+          const matchesSearch = !searchTerm || menuName.includes(searchTerm);
+          const isVisible = matchesFilter && matchesSearch;
+
+          card.classList.toggle("d-none", !isVisible);
+          if (isVisible) visibleCount += 1;
+        });
+
+        if (menuVisibleCount) {
+          menuVisibleCount.textContent = String(visibleCount);
+        }
+        if (menuEmptyState) {
+          menuEmptyState.classList.toggle("d-none", visibleCount !== 0);
+        }
+      };
+
+      const setActiveFilter = filter => {
+        activeFilter = filter;
+        filterButtons.forEach(button => {
+          const isActive = button.dataset.menuFilter === activeFilter;
+          button.classList.toggle("active", isActive);
+          button.setAttribute("aria-pressed", String(isActive));
+        });
+        updateMenuVisibility();
+      };
+
+      filterButtons.forEach(button => {
+        button.addEventListener("click", () => {
+          setActiveFilter(button.dataset.menuFilter || "all");
+        });
+      });
+
+      if (menuSearch) {
+        menuSearch.addEventListener("input", () => {
+          searchTerm = normalizeText(menuSearch.value.trim());
+          updateMenuVisibility();
+        });
+      }
+
+      setActiveFilter("all");
     }
   }
 
